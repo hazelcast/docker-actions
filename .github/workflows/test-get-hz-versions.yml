@@ -1,7 +1,6 @@
 name: Test get-hz-versions action
 
 on:
-  workflow_dispatch:
   workflow_call:
 
 jobs:
