@@ -1,6 +1,6 @@
 # docker-actions
 
-This repository contains GitHub Actions for working with Hazelcast Docker images.
+This repository contains GitHub Actions for working with [Hazelcast Docker](https://github.com/hazelcast/hazelcast-docker) images.
 
 ## Actions
 
