@@ -9,3 +9,6 @@ jobs:
   test-slack-notification:
     uses: ./.github/workflows/test-slack-notification.yml
     secrets: inherit
+
+  test-get-supported-jdks:
+    uses: ./.github/workflows/test-get-supported-jdks.yml
