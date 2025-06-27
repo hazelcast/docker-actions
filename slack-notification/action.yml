@@ -4,6 +4,9 @@ inputs:
   slack-webhook-url:
     description: Slack webhook url
     required: true
+  slack-channel:
+    description: Slack channel to send the notification to
+    default: "#hazelcast-docker-notifications"
 runs:
   using: "composite"
   steps:
@@ -12,7 +15,6 @@ runs:
       with:
         fields: all
         status: ${{ job.status }}
-        channel: "#hazelcast-docker-notifications"
+        channel: ${{ inputs.slack-channel }}
       env:
         SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook-url }}
-

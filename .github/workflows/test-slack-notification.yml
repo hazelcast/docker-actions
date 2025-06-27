@@ -15,4 +15,4 @@ jobs:
         uses: ./slack-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-
+          slack-channel: "#test-channel"
