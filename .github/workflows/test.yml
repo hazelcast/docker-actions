@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-get-hz-versions:
-    uses: ./.github/workflows/test-get-hz-versions.yml
-
-  test-slack-notification:
-    uses: ./.github/workflows/test-slack-notification.yml
+  test-actions:
+    uses: ./.github/workflows/test-actions.yml
     secrets: inherit
