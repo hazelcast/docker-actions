@@ -11,7 +11,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run action
-        id: hz_versions
         uses: ./slack-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK }}
