@@ -2,7 +2,7 @@ name: Get supported JDKs
 description: Get supported JDKs
 inputs:
   HZ_VERSION:
-    description: HZ Version
+    description: HZ Version (e.g. 5.4.0)
     required: true
 outputs:
   jdks:
