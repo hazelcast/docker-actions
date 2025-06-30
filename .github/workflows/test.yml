@@ -36,4 +36,3 @@ jobs:
           else
             echo "✅ All jobs completed successfully!"
           fi
-
