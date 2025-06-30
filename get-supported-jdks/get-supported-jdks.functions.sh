@@ -1,5 +1,8 @@
 version_less_or_equal() {
-  [ "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
+  local ADD_DASH_TO_FINAL_VERSION='/-/!{s/$/_/}'
+  local v1=$(echo "$1" | sed $ADD_DASH_TO_FINAL_VERSION)
+  local v2=$(echo "$2" | sed $ADD_DASH_TO_FINAL_VERSION)
+  [ "$v1" = "$(echo -e "$v1\n$v2" | sort -V | head -n1)" ]
 }
 
 version_less_than() {

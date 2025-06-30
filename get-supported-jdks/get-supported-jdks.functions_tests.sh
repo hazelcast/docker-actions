@@ -58,6 +58,9 @@ assert_version_less_or_equal "5.0.0" "4.2.8" "false"
 assert_version_less_or_equal "4.2.8" "3.0.0" "false"
 assert_version_less_or_equal "5.3.2" "5.3.1" "false"
 
+assert_version_less_or_equal "5.4.0-DEVEL-1" "5.4.0" "true"
+assert_version_less_or_equal "5.4.0-DEVEL-1" "5.4.0-DEVEL-1" "true"
+
 log_header "Tests for version_less_than"
 assert_version_less_than "3.9.4" "4.0.0" "true"
 assert_version_less_than "4.1.10" "4.2.1" "true"
@@ -73,6 +76,10 @@ assert_version_less_than "4.2.1" "4.1.10" "false"
 assert_version_less_than "5.0.0" "4.2.8" "false"
 assert_version_less_than "4.2.8" "3.0.0" "false"
 assert_version_less_than "5.3.2" "5.3.1" "false"
+
+assert_version_less_than "4.1.0-BETA-1" "4.1.0" "true"
+assert_version_less_than "5.4.0-DEVEL-1" "5.4.0" "true"
+assert_version_less_than "5.4.0" "5.4.0-DEVEL-1" "false"
 
 function assert_get_supported_jdks {
   local HZ_VERSION=$1
