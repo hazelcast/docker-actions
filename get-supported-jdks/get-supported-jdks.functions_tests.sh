@@ -29,6 +29,7 @@ function assert_version_less_than {
   version_less_than "$VERSION1" "$VERSION2" && RESULT=true || RESULT=false
   assert_eq "$RESULT" "$EXPECTED" "$MSG" && log_success "$MSG" || TESTS_RESULT=$?
 }
+
 function assert_get_supported_jdks {
   local HZ_VERSION=$1
   local EXPECTED=$2
