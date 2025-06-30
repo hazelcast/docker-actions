@@ -10,6 +10,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Test scripts
+        run: ./get-supported-jdks/test_scripts.sh
+
       - name: Run get-supported-jdks 5.3.8
         id: jdks_5_3_8
         uses: ./get-supported-jdks
