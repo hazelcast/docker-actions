@@ -90,5 +90,4 @@ assert_get_supported_jdks "5.4.1" "['17', '21']"
 assert_get_supported_jdks "5.5.0" "['17', '21']"
 assert_get_supported_jdks "6.0.0" "['17', '21']"
 
-
 assert_eq 0 "$TESTS_RESULT" "All tests should pass"
