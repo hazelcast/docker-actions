@@ -1,4 +1,4 @@
-name: Which editions should build
+name: Resolve which editions should build
 inputs:
   release-type:
     description: EE, OS, ALL etc

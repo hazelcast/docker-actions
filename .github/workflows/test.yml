@@ -20,8 +20,8 @@ jobs:
   test-get-supported-jdks:
     uses: ./.github/workflows/test-get-supported-jdks.yml
 
-  test-which-editions:
-    uses: ./.github/workflows/test-which-editions.yml
+  test-resolve-editions:
+    uses: ./.github/workflows/test-resolve-editions.yml
 
   assert-all-jobs-succeeded:
     runs-on: ubuntu-latest

@@ -1,4 +1,4 @@
-name: Test which-editions action
+name: Test resolve-editions action
 
 on:
   workflow_call:
@@ -11,4 +11,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Test scripts
-        run: ./which-editions/test_scripts.sh
+        run: ./resolve-editions/test_scripts.sh
