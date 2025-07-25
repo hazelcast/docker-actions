@@ -39,6 +39,4 @@ assert_should_build_ee  "OSS" "no"
 assert_should_build_ee  "EE" "yes"
 assert_should_build_ee  "dummy value" "no"
 
-
-
 assert_eq 0 "$TESTS_RESULT" "All tests should pass"
