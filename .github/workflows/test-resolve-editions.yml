@@ -30,7 +30,7 @@ jobs:
             local release_type=$1
             local expected=$2
             local actual=$3
-            local msg="Should-build for ${release_type} should be equal to ${expected}"
+            local msg="should_build for ${release_type} should be equal to ${expected}"
             assert_eq "$expected" "$actual" "$msg" && log_success "$msg" || TESTS_RESULT=$?
           }
           
