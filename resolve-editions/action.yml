@@ -10,14 +10,14 @@ inputs:
     required: true
 outputs:
   should_build_oss:
-    value: ${{ steps.which_editions.outputs.should_build_oss }}
+    value: ${{ steps.which-editions.outputs.should_build_oss }}
   should_build_ee:
-    value: ${{ steps.which_editions.outputs.should_build_ee }}
+    value: ${{ steps.which-editions.outputs.should_build_ee }}
 runs:
   using: "composite"
   steps:
     - shell: bash
-      id: which_editions
+      id: which-editions
       run: |
         source ${{ github.action_path }}/build.functions.sh
 
