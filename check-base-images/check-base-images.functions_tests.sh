@@ -31,7 +31,6 @@ function assert_packages_updatable {
   assert_eq "${expected_exit_code}" "${actual_exit_code}" "${msg}" && log_success "${msg}" || TESTS_RESULT=$?
 }
 
-
 log_header "Tests for packages_updatable"
 assert_packages_updatable hazelcast/hazelcast:5.0.1-slim alpine:3.15.0  0
 assert_packages_updatable hazelcast/hazelcast-enterprise:5.0.1-slim redhat/ubi8-minimal:8.5 0
