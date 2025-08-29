@@ -43,5 +43,4 @@ log_header "Tests for base_image_outdated"
 assert_base_image_outdated alpine:latest alpine:latest 1
 assert_base_image_outdated hazelcast/hazelcast:5.0.1-slim alpine:latest 0
 
-
 assert_eq 0 "$TESTS_RESULT" "All tests should pass"
