@@ -1,4 +1,5 @@
-source /dev/stdin <<< "$(curl --silent https://raw.githubusercontent.com/hazelcast/hazelcast-docker/master/.github/scripts/logging.functions.sh)"
+# shellcheck source=../.github/scripts/logging.functions.sh
+. .github/scripts/logging.functions.sh
 
 # Determine if the packages in the specified image are updatable
 # Returns exit code:
