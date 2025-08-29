@@ -34,7 +34,7 @@ runs:
         HZ_VERSION_OSS=$(get_hz_version hazelcast-oss/Dockerfile)
         HZ_VERSION_EE=$(get_hz_version hazelcast-enterprise/Dockerfile)
 
-        if [[ ${HZ_VERSION_OSS} == ${HZ_VERSION_EE} ]]; then
+        if [[ "${HZ_VERSION_OSS}" == "${HZ_VERSION_EE}"]]; then
           echo "HZ_VERSION=${HZ_VERSION_OSS}" >> ${GITHUB_OUTPUT}
         else
           echoerr "Versions extracted from Dockerfile(s) do not match (${HZ_VERSION_OSS} / ${HZ_VERSION_EE})!"
