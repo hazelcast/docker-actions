@@ -24,7 +24,7 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        source /dev/stdin <<< "$(curl --silent https://raw.githubusercontent.com/hazelcast/hazelcast-docker/master/.github/scripts/logging.functions.sh)"
+        . ${{ github.action_path }}/../.github/scripts/logging.functions.sh
 
         get_hz_version() {
           local dockerfile=$1
