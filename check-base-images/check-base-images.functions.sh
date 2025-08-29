@@ -32,8 +32,7 @@ function packages_updatable() {
     # use assumeno as a workaround for lack of dry-run option
     output=$(docker run --user 0 --rm "${image}" sh -c "microdnf --assumeno upgrade --nodocs")
     echodebug "${output}"
-    local package_upgrades_count
-    package_upgrades_count=$(echo "${output}" | grep --count Upgrading)
+    local package_upgrades_count=$(echo "${output}" | grep --count Upgrading)
     [[ "${package_upgrades_count}" -ne 0 ]]
   else
     echoerr "Unsupported base image: ${base_image}"

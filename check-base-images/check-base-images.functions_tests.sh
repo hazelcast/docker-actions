@@ -11,7 +11,6 @@ source /dev/stdin <<< "$(curl --silent https://raw.githubusercontent.com/hazelca
 
 TESTS_RESULT=0
 
-
 function assert_base_image_outdated {
   local current_image=$1
   local base_image=$2
