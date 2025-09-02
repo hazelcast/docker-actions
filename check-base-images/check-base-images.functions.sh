@@ -31,7 +31,6 @@ function packages_updatable() {
       echonotice "${output}"
       return 0
     else
-      echodebug "${output}"
       return 1
     fi
   elif [[ "${base_image}" == *"redhat/ubi"* ]]; then
