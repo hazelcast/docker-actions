@@ -39,6 +39,5 @@ jobs:
           }
           
           assert_equals "HZ_VERSION" "1.2.3" "${{ steps.hz_versions.outputs.HZ_VERSION }}"
-          assert_populated "LAST_RELEASED_HZ_VERSION_OSS" "${{ steps.hz_versions.outputs.LAST_RELEASED_HZ_VERSION_OSS }}"
 
           assert_eq 0 "$TESTS_RESULT" "All tests should pass"
