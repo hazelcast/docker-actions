@@ -12,9 +12,6 @@ outputs:
   HZ_VERSION:
     description: Hazelcast version
     value: ${{ steps.get_docker_vars.outputs.HZ_VERSION }}
-  LAST_RELEASED_HZ_VERSION_OSS:
-    description: Last released Hazelcast OSS version
-    value: ${{ steps.get_maven_vars.outputs.LAST_RELEASED_HZ_VERSION_OSS }}
 
 runs:
   using: "composite"
@@ -40,12 +37,3 @@ runs:
           echoerr "Versions extracted from Dockerfile(s) do not match (${HZ_VERSION_OSS} / ${HZ_VERSION_EE})!"
           exit 1
         fi
-
-    - name: Get Maven variables
-      id: get_maven_vars
-      shell: bash
-      working-directory: ${{ inputs.working-directory }}
-      run: |
-        source /dev/stdin <<< "$(curl --silent https://raw.githubusercontent.com/hazelcast/hazelcast-docker/master/hazelcast-oss/maven.functions.sh)"
-        LAST_RELEASED_HZ_VERSION_OSS="$(get_latest_version com.hazelcast hazelcast-distribution https://repo.maven.apache.org/maven2)"
-        echo "LAST_RELEASED_HZ_VERSION_OSS=$LAST_RELEASED_HZ_VERSION_OSS" >> ${GITHUB_OUTPUT}

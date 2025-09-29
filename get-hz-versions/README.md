@@ -13,7 +13,6 @@ A GitHub Action that extracts Hazelcast OSS and EE version information from Dock
 | Name                         | Description                                                 |
 |------------------------------|-------------------------------------------------------------|
 | HZ_VERSION                   | Hazelcast version from the `Dockerfile`                     |
-| LAST_RELEASED_HZ_VERSION_OSS | Latest released Hazelcast OSS version from Maven Central    |
 
 ## Usage
 
