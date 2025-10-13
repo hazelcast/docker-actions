@@ -42,12 +42,20 @@ jobs:
             local version=$1
             local expected=$2
             local actual=$3
-            local msg="Supported JDKs for $version should be equal to $expected"
+            local msg="For ${version} should be equal to ${expected}"
             assert_eq "$expected" "$actual" "$msg" && log_success "$msg" || TESTS_RESULT=$?
           }
           
-          assert_equals "5.3.8" "['11', '17']" "${{ steps.jdks_5_3_8.outputs.jdks }}"
-          assert_equals "5.4.0" "['17', '21']" "${{ steps.jdks_5_4_0.outputs.jdks }}"
-          assert_equals "5.4.1" "['17', '21']" "${{ steps.jdks_5_4_1.outputs.jdks }}"
+          version=5.3.8
+          assert_equals "${version}" "['11', '17']" "${{ steps.jdks_5_3_8.outputs.jdks }}"
+          assert_equals "${version}" "17" "${{ steps.jdks_5_3_8.outputs.default-jdk }}"
+
+          version=5.4.0
+          assert_equals "${version}" "['17', '21']" "${{ steps.jdks_5_4_0.outputs.jdks }}"
+          assert_equals "${version}" "21" "${{ steps.jdks_5_4_0.outputs.default-jdk }}"
+
+          version=5.4.1
+          assert_equals "${version}" "['17', '21']" "${{ steps.jdks_5_4_1.outputs.jdks }}"
+          assert_equals "${version}" "21" "${{ steps.jdks_5_4_1.outputs.default-jdk }}"
 
           assert_eq 0 "$TESTS_RESULT" "All tests should pass"

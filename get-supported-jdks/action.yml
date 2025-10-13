@@ -8,6 +8,9 @@ outputs:
   jdks:
     value: ${{ steps.get-supported-jdks.outputs.jdks }}
     description: Returns supported JDKs
+  default-jdk:
+    value: ${{ steps.get-default-jdk.outputs.default-jdk }}
+    description: Returns default JDK
 runs:
   using: "composite"
   steps:
@@ -15,4 +18,9 @@ runs:
       id: get-supported-jdks
       run: |
         source ${{ github.action_path }}/get-supported-jdks.functions.sh
-        echo "jdks=$(get_supported_jdks ${{ inputs.HZ_VERSION}} )" >> $GITHUB_OUTPUT
+        echo "jdks=$(get_supported_jdks ${{ inputs.HZ_VERSION}} )" >> ${GITHUB_OUTPUT}
+
+    - shell: bash
+      id: get-default-jdk
+      run: |
+        echo "default-jdk=$(jq --raw-output '.[-1]' <<< '${{ steps.get-supported-jdks.outputs.jdks }}')" >> ${GITHUB_OUTPUT}
