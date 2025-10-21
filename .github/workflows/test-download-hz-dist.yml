@@ -1,0 +1,20 @@
+name: Test download-hz-dist action
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - uses: ./download-hz-dist
+        with:
+          repo-vars-as-json: "{\n  \"MAVEN_EE_RELEASE_REPO\": \"https://repository.hazelcast.com/release\",\n  \"MAVEN_OSS_RELEASE_REPO\": \" \"\n}"
+          distribution: "hazelcast"
+          hz_version: "5.0"
+          classifier: "slim"
+          packaging: "tar.gz"
+          output_file: "distribution"
