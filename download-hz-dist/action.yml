@@ -24,7 +24,8 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - id: get_repo_url
+    - name: Get repository URL
+      id: get_repo_url
       shell: bash
       run: |
         # Pick an appropriate key from "repo-vars-as-json"
@@ -51,7 +52,8 @@ runs:
         # Lookup up the value of the selected key in "repo-vars-as-json"
         echo "repo_url=$(jq --raw-output .${repo_var_name} <<< '${{ inputs.repo-vars-as-json }}')" >> ${GITHUB_OUTPUT}
 
-    - shell: bash
+    - name: Download via Maven
+      shell: bash
       run: |
         mvn \
           org.apache.maven.plugins:maven-dependency-plugin:2.10:get \
