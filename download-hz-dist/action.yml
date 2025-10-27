@@ -16,12 +16,15 @@ inputs:
     description: 'Maven packaging'
     required: true
   output_file:
-    description: 'Path to the output file, if not defaults to "distribution"'
+    description: 'Path to the output file'
     required: false
 outputs:
   maven_repo_url:
     description: 'The Maven repository root URL used to download the distribution'
     value: ${{ steps.get_repo_url.outputs.repo_url }}
+  output_file:
+    description: 'Path to the downloaded file'
+    value: ${{ steps.derive-output-file.outputs.file }}
 runs:
   using: "composite"
   steps:
@@ -53,6 +56,12 @@ runs:
         # Lookup up the value of the selected key in "repo-vars-as-json"
         echo "repo_url=$(jq --raw-output .${repo_var_name} <<< '${{ inputs.repo-vars-as-json }}')" >> ${GITHUB_OUTPUT}
 
+    - name: Derive output file
+      id: derive-output-file
+      shell: bash
+      run: |
+        echo "file=${{ inputs.output_file || format('distribution.{0}', inputs.packaging) }}" >> ${GITHUB_OUTPUT}
+
     - name: Download via Maven
       shell: bash
       run: |
@@ -65,6 +74,6 @@ runs:
           -Dclassifier="${{ inputs.classifier }}" \
           -Dpackaging="${{ inputs.packaging }}" \
           -Dtransitive=false \
-          -Ddest="${{ inputs.output_file || format('distribution.{0}', inputs.packaging) }}" \
+          -Ddest="${{ steps.derive-output-file.outputs.file }}" \
           --batch-mode \
           --no-transfer-progress

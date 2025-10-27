@@ -17,10 +17,17 @@ jobs:
 
       - name: Download ${{ matrix.distribution }}"
         uses: ./download-hz-dist
+        id: download
         with:
           repo-vars-as-json: "{\n  \"MAVEN_EE_RELEASE_REPO\": \"https://repository.hazelcast.com/release\",\n  \"MAVEN_OSS_RELEASE_REPO\": \" \"\n}"
           distribution: "${{ matrix.distribution }}"
           hz_version: "5.0"
           classifier: "slim"
           packaging: "tar.gz"
-          output_file: "distribution"
+
+      - name: Check file exists
+        run: |
+          if [[ ! -f "${{ steps.download.outputs.output_file }}" ]]; then
+            echo "${{ steps.download.outputs.output_file }} not found!"
+            exit 1
+          fi
