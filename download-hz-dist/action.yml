@@ -16,7 +16,8 @@ inputs:
     description: 'Maven packaging'
     required: true
   output_file:
-    required: true
+    description: 'Path to the output file, if not defaults to "distribution"'
+    required: false
 outputs:
   maven_repo_url:
     description: 'The Maven repository root URL used to download the distribution'
@@ -64,6 +65,6 @@ runs:
           -Dclassifier="${{ inputs.classifier }}" \
           -Dpackaging="${{ inputs.packaging }}" \
           -Dtransitive=false \
-          -Ddest="${{ inputs.output_file }}" \
+          -Ddest="${{ inputs.output_file || format('distribution.{0}', inputs.packaging) }}" \
           --batch-mode \
           --no-transfer-progress
