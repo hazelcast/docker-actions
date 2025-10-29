@@ -16,6 +16,9 @@ jobs:
   test-check-redhat-service-status:
     uses: ./.github/workflows/test-check-redhat-service-status.yml
 
+  test-download-hz-dist:
+    uses: ./.github/workflows/test-download-hz-dist.yml
+
   test-get-hz-versions:
     uses: ./.github/workflows/test-get-hz-versions.yml
 
@@ -34,6 +37,7 @@ jobs:
     needs:
       - test-check-base-images
       - test-check-redhat-service-status
+      - test-download-hz-dist
       - test-get-hz-versions
       - test-get-supported-jdks
       - test-resolve-editions
