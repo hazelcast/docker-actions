@@ -59,9 +59,9 @@ function packages_updatable() {
 function get_base_image_name() {
   local dockerfile=$1
 
-  # Read the (implicitly first) `FROM` line
+  # Read the last `FROM` line
   local line
-  line=$(grep '^FROM ' "${dockerfile}")
+  line=$(grep '^FROM ' "${dockerfile}" | tail -n 1)
   cut -d' ' -f2 <<< "${line}"
 }
 
