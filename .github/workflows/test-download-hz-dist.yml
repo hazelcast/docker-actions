@@ -1,0 +1,33 @@
+name: Test download-hz-dist action
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distribution:
+          - hazelcast
+          - hazelcast-enterprise
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Download ${{ matrix.distribution }}"
+        uses: ./download-hz-dist
+        id: download
+        with:
+          repo-vars-as-json: "{\n  \"MAVEN_EE_RELEASE_REPO\": \"https://repository.hazelcast.com/release\",\n  \"MAVEN_OSS_RELEASE_REPO\": \" \"\n}"
+          distribution: "${{ matrix.distribution }}"
+          hz_version: "5.0"
+          classifier: "slim"
+          packaging: "tar.gz"
+
+      - name: Check file exists
+        run: |
+          if [[ ! -f "${{ steps.download.outputs.output_file }}" ]]; then
+            echo "${{ steps.download.outputs.output_file }} not found!"
+            exit 1
+          fi
