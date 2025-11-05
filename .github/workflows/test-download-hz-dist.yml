@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Download ${{ matrix.distribution }}"
+      - name: Download "${{ matrix.distribution }}"
         uses: ./download-hz-dist
         id: download
         with:

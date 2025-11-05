@@ -32,6 +32,8 @@ runs:
       id: get_repo_url
       shell: bash
       run: |
+        . ${{ github.action_path }}/../.github/scripts/logging.functions.sh
+
         # Pick an appropriate key from "repo-vars-as-json"
         case "${{ inputs.distribution }}" in
             "hazelcast")
