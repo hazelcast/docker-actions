@@ -17,7 +17,7 @@ runs:
     - shell: bash
       id: get-supported-jdks
       run: |
-        source ${{ github.action_path }}/get-supported-jdks.functions.sh
+        source ${GITHUB_ACTION_PATH}/get-supported-jdks.functions.sh
         echo "jdks=$(get_supported_jdks ${{ inputs.HZ_VERSION}} )" >> ${GITHUB_OUTPUT}
 
     - shell: bash

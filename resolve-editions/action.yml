@@ -19,7 +19,7 @@ runs:
     - shell: bash
       id: resolve-editions
       run: |
-        source ${{ github.action_path }}/build.functions.sh
+        source ${GITHUB_ACTION_PATH}/build.functions.sh
 
         echo "should_build_oss=$(should_build_oss "${{ inputs.release-type }}")" >> ${GITHUB_OUTPUT}
         echo "should_build_ee=$(should_build_ee "${{ inputs.release-type }}")" >> ${GITHUB_OUTPUT}
