@@ -1,14 +1,14 @@
 set -euo pipefail ${RUNNER_DEBUG:+-x}
 
 # Checks if we should build the OSS artefacts.
-# Returns "yes" if we should build it or "no" if we shouldn't.
+# Returns "true" if we should build it or "false" if we shouldn't.
 function should_build_oss() {
 
   local release_type=$1
   if [[ $release_type =~ ^(ALL|OSS)$ ]]; then
-    echo "yes"
+    echo "true"
   else
-    echo "no"
+    echo "false"
   fi
 }
 
@@ -17,8 +17,8 @@ function should_build_ee() {
 
   local release_type=$1
   if [[ $release_type =~ ^(ALL|EE)$ ]]; then
-    echo "yes"
+    echo "true"
   else
-    echo "no"
+    echo "false"
   fi
 }
