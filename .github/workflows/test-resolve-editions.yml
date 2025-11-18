@@ -34,7 +34,7 @@ jobs:
             assert_eq "$expected" "$actual" "$msg" && log_success "$msg" || TESTS_RESULT=$?
           }
           
-          assert_equals "should_build_oss" "yes" "${{ steps.resolve-editions.outputs.should_build_oss }}"
-          assert_equals "should_build_ee" "no" "${{ steps.resolve-editions.outputs.should_build_ee }}"
+          assert_equals "should_build_oss" "true" "${{ steps.resolve-editions.outputs.should_build_oss }}"
+          assert_equals "should_build_ee" "false" "${{ steps.resolve-editions.outputs.should_build_ee }}"
 
           assert_eq 0 "$TESTS_RESULT" "All tests should pass"
