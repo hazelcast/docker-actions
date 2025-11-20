@@ -1,0 +1,11 @@
+name: Get distribution classifiers
+
+outputs:
+  classifiers:
+    value: '["slim", ""]'
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: exit 0
