@@ -1,0 +1,38 @@
+name: Get supported platforms
+inputs:
+  dockerfile:
+    description: Path of the Dockerfile used to determine the base image from
+    required: true
+  jdk:
+    description: The JDK version
+    required: true
+outputs:
+  platforms:
+    description: Comma-separated string in a form suitable for supplying to Docker
+    value: ${{ steps.get-supported.outputs.platforms }}
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      id: get-supported
+      run: |
+        . ${GITHUB_ACTION_PATH}/../.github/scripts/logging.functions.sh
+        . ${GITHUB_ACTION_PATH}/../check-base-images/check-base-images.functions.sh
+        . ${GITHUB_ACTION_PATH}/docker.functions.sh
+
+        base_image_name=$(get_base_image_name ${DOCKERFILE})
+
+        case "${base_image_name}" in
+            *"alpine"*)
+              echo "platforms=$(get_alpine_supported_platforms ${JDK})" >> ${GITHUB_OUTPUT}
+            ;;
+            *"ubi"*)
+              echo "platforms=$(get_ubi_supported_platforms ${JDK})" >> ${GITHUB_OUTPUT}
+            ;;
+            *)
+            echoerr "Unsupported platform behaviour for ${base_image_name}" ; return 1
+            ;;
+        esac
+      env:
+        DOCKERFILE: ${{ inputs.dockerfile }}
+        JDK: ${{ inputs.JDK }}

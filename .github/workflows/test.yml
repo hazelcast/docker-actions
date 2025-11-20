@@ -25,6 +25,9 @@ jobs:
   test-get-supported-jdks:
     uses: ./.github/workflows/test-get-supported-jdks.yml
 
+  test-get-supported-platforms:
+    uses: ./.github/workflows/test-get-supported-platforms.yml
+
   test-resolve-editions:
     uses: ./.github/workflows/test-resolve-editions.yml
 
@@ -40,6 +43,7 @@ jobs:
       - test-download-hz-dist
       - test-get-hz-versions
       - test-get-supported-jdks
+      - test-get-supported-platforms
       - test-resolve-editions
       - test-slack-notification
     if: always()
