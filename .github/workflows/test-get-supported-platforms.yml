@@ -1,0 +1,60 @@
+name: Test get-supported-platforms action
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Run get-supported-platforms OS JDK11
+        id: platform_os_jdk11
+        uses: ./get-supported-platforms
+        with:
+          dockerfile: ./get-supported-platforms/test-data/hazelcast-oss/Dockerfile
+          jdk: 11
+
+      - name: Run get-supported-platforms EE JDK11
+        id: platform_ee_jdk11
+        uses: ./get-supported-platforms
+        with:
+          dockerfile: ./get-supported-platforms/test-data/hazelcast-enterprise/Dockerfile
+          jdk: 11
+
+      - name: Run get-supported-platforms OS JDK11
+        id: platform_os_jdk21
+        uses: ./get-supported-platforms
+        with:
+          dockerfile: ./get-supported-platforms/test-data/hazelcast-oss/Dockerfile
+          jdk: 21
+
+      - name: Run get-supported-platforms EE JDK11
+        id: platform_ee_jdk21
+        uses: ./get-supported-platforms
+        with:
+          dockerfile: ./get-supported-platforms/test-data/hazelcast-enterprise/Dockerfile
+          jdk: 21
+
+      - name: Test
+        run: |
+          set -o errexit -o nounset -o pipefail ${RUNNER_DEBUG:+-x}
+          source /dev/stdin <<< "$(curl --silent https://raw.githubusercontent.com/hazelcast/assert.sh/main/assert.sh)"
+
+          TESTS_RESULT=0
+          
+          assert_equals() {
+            local expected=$1
+            local actual=$2
+            local msg="Should be equal to ${expected}"
+            assert_eq "$expected" "$actual" "$msg" && log_success "$msg" || TESTS_RESULT=$?
+          }
+          
+          assert_equals "linux/arm64,linux/amd64,linux/s390x,linux/ppc64le" "${{ steps.platform_os_jdk11.outputs.platforms }}"
+          assert_equals "linux/arm64,linux/amd64,linux/s390x,linux/ppc64le" "${{ steps.platform_ee_jdk11.outputs.platforms }}"
+          assert_equals "linux/arm64,linux/amd64,linux/s390x" "${{ steps.platform_os_jdk21.outputs.platforms }}"
+          assert_equals "linux/arm64,linux/amd64,linux/s390x,linux/ppc64le" "${{ steps.platform_ee_jdk21.outputs.platforms }}"
+
+          assert_eq 0 "$TESTS_RESULT" "All tests should pass"
