@@ -7,6 +7,17 @@ on:
         required: true
 
 jobs:
+  test_scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Test scripts
+        run: ./check-if-latest-lts-release/test_scripts.sh
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN }}
+
   test:
     runs-on: ubuntu-latest
     env:
@@ -14,14 +25,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-
-      - name: debug
-        run: echo "token is ${{ secrets.TOKEN }}"
-
-      - name: Test scripts
-        run: ./check-if-latest-lts-release/test_scripts.sh
-        env:
-          GH_TOKEN: ${{ secrets.TOKEN }}
 
       - name: Run check-if-latest-lts-release 5.5.0
         id: jdks_5_5_0
