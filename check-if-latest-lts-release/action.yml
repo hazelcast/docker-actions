@@ -1,0 +1,70 @@
+name: Check if latest EE LTS release
+description: Check if latest EE LTS release
+inputs:
+  github_token:
+    required: true
+  github_repository:
+    required: true
+  hz_version:
+    description: Version to be released
+    required: true
+  is_lts_override:
+    description: Override is LTS release or not
+    required: true
+outputs:
+  is_latest_lts:
+    value: ${{ steps.is_latest_lts.outputs.is_latest_lts }}
+    description: Returns 'true' if the release if the latest LTS
+runs:
+  using: "composite"
+  steps:
+    - name: Set Environment Variables
+      shell: bash
+      run: |
+        echo "IS_LTS_FILE=.github/lts" >> ${GITHUB_ENV}
+
+    - name: Check if EE LTS release
+      shell: bash
+      run: |
+        if [ -n "${IS_LTS_OVERRIDE}" ]; then
+            echo "IS_LTS overridden to '${IS_LTS_OVERRIDE}'"
+            echo "IS_LTS=${IS_LTS_OVERRIDE}" >> ${GITHUB_ENV}
+        elif [ -f ${IS_LTS_FILE} ]; then
+            echo "IS_LTS=true" >> ${GITHUB_ENV}
+            echo "File '${IS_LTS_FILE}' exists. Assuming LTS release"
+        else
+            echo "File '${IS_LTS_FILE}' does not exist. Assuming non-LTS release"
+        fi
+      env:
+        IS_LTS_OVERRIDE: ${{ inputs.is_lts_override }}
+
+    - name: Check if latest EE LTS release
+      if: env.IS_LTS == 'true'
+      id: get_current_latest_lts_version
+      shell: bash
+      run: |
+        source ${GITHUB_ACTION_PATH}/version.functions.sh
+
+        echo "version=$(get_last_version_with_file ${GITHUB_REPOSITORY} ${IS_LTS_FILE})" >> ${GITHUB_OUTPUT}
+      env:
+        GITHUB_REPOSITORY: ${{ inputs.github_repository }}
+        GH_TOKEN: ${{ inputs.github_token }}}}
+
+    - uses: madhead/semver-utils@latest
+      if: env.IS_LTS == 'true'
+      id: compare_to_latest_lts
+      with:
+        version: ${{ inputs.hz_version }}
+        compare-to: ${{ steps.get_current_latest_lts_version.outputs.version }}
+
+    - name: Check if latest EE LTS release
+      if: env.IS_LTS == 'true'
+      id: is_latest_lts
+      shell: bash
+      run: |
+        # TODO COuld you put this in the output directly
+        if [[ "${{ steps.compare_to_latest_lts.outputs.comparison_result }}" == ">" || "${{ steps.compare_to_latest_lts.outputs.comparison_result }}" == "=" ]]; then
+            echo "is_latest_lts=true" >> ${GITHUB_OUTPUT}
+        else
+            echo "is_latest_lts=false" >> ${GITHUB_OUTPUT}
+        fi

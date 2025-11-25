@@ -13,6 +13,11 @@ jobs:
   test-check-base-images:
     uses: ./.github/workflows/test-check-base-images.yml
 
+  test-check-if-latest-lts-release:
+    uses: ./.github/workflows/test-check-if-latest-lts-release.yml
+    with:
+      GITHUB_TOKEN: ${{ github.token }}
+
   test-check-redhat-service-status:
     uses: ./.github/workflows/test-check-redhat-service-status.yml
 
@@ -36,6 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - test-check-base-images
+      - test-check-if-latest-lts-release
       - test-check-redhat-service-status
       - test-download-hz-dist
       - test-get-hz-versions
