@@ -13,10 +13,15 @@ jobs:
   test-check-base-images:
     uses: ./.github/workflows/test-check-base-images.yml
 
+  test-check-if-latest-lts-release2:
+    runs-on: ubuntu-slim
+    steps:
+      - run: echo "token is ${{ github.token }}"
+      
   test-check-if-latest-lts-release:
     uses: ./.github/workflows/test-check-if-latest-lts-release.yml
     with:
-      GITHUB_TOKEN2: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
 
   test-check-redhat-service-status:
     uses: ./.github/workflows/test-check-redhat-service-status.yml
