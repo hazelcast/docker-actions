@@ -2,9 +2,10 @@ name: Test check-if-latest-lts-release action
 
 on:
   workflow_call:
-    secrets:
+    inputs:
       GITHUB_TOKEN:
         required: true
+        type: string
 
 jobs:
   test:
@@ -16,19 +17,19 @@ jobs:
         uses: actions/checkout@v6
 
       - name: debug
-        run: echo "token is ${{ secrets.GITHUB_TOKEN }}"
+        run: echo "token is ${{ inputs.GITHUB_TOKEN }}"
 
 
       - name: Test scripts
         run: ./check-if-latest-lts-release/test_scripts.sh
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
       - name: Run check-if-latest-lts-release 5.5.0
         id: jdks_5_5_0_no_override
         uses: ./check-if-latest-lts-release
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ inputs.GITHUB_TOKEN }}
           github_repository: ${{ env.github_repository }}
           hz_version: 5.5.0
           is_lts_override: false
@@ -37,7 +38,7 @@ jobs:
         id: jdks_5_5_0_override
         uses: ./check-if-latest-lts-release
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ inputs.GITHUB_TOKEN }}
           github_repository: ${{ env.github_repository }}
           hz_version: 5.5.0
           is_lts_override: true
@@ -46,7 +47,7 @@ jobs:
         id: jdks_5_5_8_no_override
         uses: ./check-if-latest-lts-release
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ inputs.GITHUB_TOKEN }}
           github_repository: ${{ env.github_repository }}
           hz_version: 5.5.8
           is_lts_override: false
@@ -55,7 +56,7 @@ jobs:
         id: jdks_5_5_8_override
         uses: ./check-if-latest-lts-release
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ inputs.GITHUB_TOKEN }}
           github_repository: ${{ env.github_repository }}
           hz_version: 5.5.8
           is_lts_override: true
@@ -64,7 +65,7 @@ jobs:
         id: jdks_5_6_0_no_override
         uses: ./check-if-latest-lts-release
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ inputs.GITHUB_TOKEN }}
           github_repository: ${{ env.github_repository }}
           hz_version: 5.6.0
           is_lts_override: false
@@ -73,7 +74,7 @@ jobs:
         id: jdks_5_6_0_override
         uses: ./check-if-latest-lts-release
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ inputs.GITHUB_TOKEN }}
           github_repository: ${{ env.github_repository }}
           hz_version: 5.6.0
           is_lts_override: true
