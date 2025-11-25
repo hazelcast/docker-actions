@@ -20,7 +20,12 @@ function get_last_version_with_file() {
   local github_repository=$1
   local file=$2
 
+  # TODO REMOVE
+  __get_tags_descending "${github_repository}"
+
   for tag in $(__get_tags_descending "${github_repository}" ); do
+    # TODO REMOFVE
+    echo "LOoking at ${tag}"
     if __file_exists_in_tag "${github_repository}" "${file}" "${tag}"; then
       echo "${tag}" | cut -c2-
       return
