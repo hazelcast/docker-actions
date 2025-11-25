@@ -16,6 +16,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: debug
+        run: echo "token is ${{ inputs.GITHUB_TOKEN }}"
+
+
       - name: Test scripts
         run: ./check-if-latest-lts-release/test_scripts.sh
         env:
