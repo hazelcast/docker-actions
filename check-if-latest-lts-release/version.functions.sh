@@ -11,8 +11,9 @@ function __file_exists_in_tag() {
   local github_repository=$1
   local file=$2
   local tag=$3
-
-  gh api "repos/${github_repository}/contents/${file}?ref=${tag}" --method HEAD 2>/dev/null
+ 
+  # TODO 2>/dev/null
+  gh api "repos/${github_repository}/contents/${file}?ref=${tag}" --method HEAD
 }
 
 function get_last_version_with_file() {
