@@ -3,7 +3,7 @@ description: Check if latest EE LTS release
 inputs:
   github_token:
     required: true
-  github_repository:
+  github_repository_to_query:
     required: true
   hz_version:
     description: Version to be released
@@ -47,10 +47,10 @@ runs:
 
         set -x
         # TODOR EMOVE
-        echo "version=$(get_last_version_with_file ${GITHUB_REPOSITORY} ${IS_LTS_FILE})"
-        echo "version=$(get_last_version_with_file ${GITHUB_REPOSITORY} ${IS_LTS_FILE})" >> ${GITHUB_OUTPUT}
+        echo "version=$(get_last_version_with_file ${GITHUB_REPOSITORY_TO_QUERY} ${IS_LTS_FILE})"
+        echo "version=$(get_last_version_with_file ${GITHUB_REPOSITORY_TO_QUERY} ${IS_LTS_FILE})" >> ${GITHUB_OUTPUT}
       env:
-        GITHUB_REPOSITORY: ${{ inputs.github_repository }}
+        GITHUB_REPOSITORY_TO_QUERY: ${{ inputs.github_repository_to_query }}
         GH_TOKEN: ${{ inputs.github_token }}}}
 
     - uses: madhead/semver-utils@latest
