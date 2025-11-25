@@ -16,13 +16,14 @@ jobs:
   test-check-if-latest-lts-release2:
     runs-on: ubuntu-slim
     steps:
-      - run: echo "token is ${{ github.token }}"
+      - run: echo "token is ${{ secrets.GITHUB_TOKEN }}"
+
   test-check-if-latest-lts-release3:
     runs-on: ubuntu-slim
     steps:
       - run: echo "token is ${GH_TOKEN}"
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
   test-check-if-latest-lts-release:
     uses: ./.github/workflows/test-check-if-latest-lts-release.yml
