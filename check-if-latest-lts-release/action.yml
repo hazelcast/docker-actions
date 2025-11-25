@@ -39,13 +39,15 @@ runs:
       env:
         IS_LTS_OVERRIDE: ${{ inputs.is_lts_override }}
 
-    - name: Check if latest EE LTS release
-      if: env.IS_LTS == 'true'
+    - if: env.IS_LTS == 'true'
       id: get_current_latest_lts_version
       shell: bash
       run: |
         source ${GITHUB_ACTION_PATH}/version.functions.sh
 
+        set -x
+        # TODOR EMOVE
+        echo "version=$(get_last_version_with_file ${GITHUB_REPOSITORY} ${IS_LTS_FILE})"
         echo "version=$(get_last_version_with_file ${GITHUB_REPOSITORY} ${IS_LTS_FILE})" >> ${GITHUB_OUTPUT}
       env:
         GITHUB_REPOSITORY: ${{ inputs.github_repository }}

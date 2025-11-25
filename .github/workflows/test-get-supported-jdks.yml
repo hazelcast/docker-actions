@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  test:
+  test_scripts:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -12,6 +12,12 @@ jobs:
 
       - name: Test scripts
         run: ./get-supported-jdks/test_scripts.sh
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
       - name: Run get-supported-jdks 5.3.8
         id: jdks_5_3_8
