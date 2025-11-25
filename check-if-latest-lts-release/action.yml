@@ -8,6 +8,7 @@ inputs:
   hz_version:
     description: Version to be released
     required: true
+  # todo log this is bug bad
   is_lts_override:
     description: Override is LTS release or not
     required: true
@@ -26,7 +27,7 @@ runs:
     - name: Check if EE LTS release
       shell: bash
       run: |
-        if [ -n "${IS_LTS_OVERRIDE}" ]; then
+        if [ "${IS_LTS_OVERRIDE}" == "true" ]; then
             echo "IS_LTS overridden to '${IS_LTS_OVERRIDE}'"
             echo "IS_LTS=${IS_LTS_OVERRIDE}" >> ${GITHUB_ENV}
         elif [ -f ${IS_LTS_FILE} ]; then
