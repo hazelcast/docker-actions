@@ -21,5 +21,7 @@ runs:
       run: |
         source ${GITHUB_ACTION_PATH}/build.functions.sh
 
-        echo "should_build_oss=$(should_build_oss "${{ inputs.release-type }}")" >> ${GITHUB_OUTPUT}
-        echo "should_build_ee=$(should_build_ee "${{ inputs.release-type }}")" >> ${GITHUB_OUTPUT}
+        echo "should_build_oss=$(should_build_oss "${RELEASE_TYPE}")" >> ${GITHUB_OUTPUT}
+        echo "should_build_ee=$(should_build_ee "${RELEASE_TYPE}")" >> ${GITHUB_OUTPUT}
+      env:
+        RELEASE_TYPE: ${{ inputs.release-type }}

@@ -34,17 +34,17 @@ runs:
           . check-base-images/check-base-images.functions.sh
         popd
 
-        image=${{ inputs.image-name }}
-        dockerfile=hazelcast-docker/${{ inputs.dockerfile-path }}
-
-        echodebug "Checking ${image}"
-        if base_image_outdated_from_dockerfile "${image}" "${dockerfile}"; then
+        echodebug "Checking ${IMAGE}"
+        if base_image_outdated_from_dockerfile "${IMAGE}" "${DOCKERFILE}"; then
           echo "outdated=true" >> ${GITHUB_OUTPUT}
-          echonotice "${image} needs rebuild"
-        elif packages_updatable_from_dockerfile "${image}" "${dockerfile}"; then
+          echonotice "${IMAGE} needs rebuild"
+        elif packages_updatable_from_dockerfile "${IMAGE}" "${DOCKERFILE}"; then
           echo "outdated=true" >> ${GITHUB_OUTPUT}
-          echonotice "System package upgrades for ${image} available"
+          echonotice "System package upgrades for ${IMAGE} available"
         else
           echo "outdated=false" >> ${GITHUB_OUTPUT}
-          echodebug "${image} is up-to-date"
+          echodebug "${IMAGE} is up-to-date"
         fi
+      env:
+        IMAGE: ${{ inputs.image-name }}
+        DOCKERFILE: hazelcast-docker/${{ inputs.dockerfile-path }}

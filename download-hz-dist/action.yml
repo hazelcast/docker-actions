@@ -35,34 +35,41 @@ runs:
         . ${GITHUB_ACTION_PATH}/../.github/scripts/logging.functions.sh
 
         # Pick an appropriate key from "repo-vars-as-json"
-        case "${{ inputs.distribution }}" in
+        case "${DISTRIBUTION}" in
             "hazelcast")
-              if [[ "${{ inputs.hz_version }}" == *"SNAPSHOT"* ]]; then
+              if [[ "${HZ_VERSION}" == *"SNAPSHOT"* ]]; then
                 repo_var_name=MAVEN_OSS_SNAPSHOT_REPO
               else
                 repo_var_name=MAVEN_OSS_RELEASE_REPO
               fi
             ;;
             "hazelcast-enterprise")
-              if [[ "${{ inputs.hz_version }}" == *"SNAPSHOT"* ]]; then
+              if [[ "${HZ_VERSION}" == *"SNAPSHOT"* ]]; then
                 repo_var_name=MAVEN_EE_SNAPSHOT_REPO
               else
                 repo_var_name=MAVEN_EE_RELEASE_REPO
               fi
             ;;
             *)
-            echoerr "Unsupported distribution type '${{ inputs.distribution }}'" ; return 1
+            echoerr "Unsupported distribution type '${DISTRIBUTION}'" ; return 1
             ;;
         esac
 
         # Lookup up the value of the selected key in "repo-vars-as-json"
-        echo "repo_url=$(jq --raw-output .${repo_var_name} <<< '${{ inputs.repo-vars-as-json }}')" >> ${GITHUB_OUTPUT}
+        REPO_URL=$(jq --raw-output .${repo_var_name} <<< "${REPO_VARS_AS_JSON}")
+        echo "repo_url=${REPO_URL}" >> ${GITHUB_OUTPUT}
+      env:
+        REPO_VARS_AS_JSON: ${{ inputs.repo-vars-as-json }}
+        DISTRIBUTION: ${{ inputs.distribution }}
+        HZ_VERSION: ${{ inputs.hz_version }}
 
     - name: Derive output file
       id: derive-output-file
       shell: bash
       run: |
-        echo "file=${{ inputs.output_file || format('distribution.{0}', inputs.packaging) }}" >> ${GITHUB_OUTPUT}
+        echo "file=${FILE}" >> ${GITHUB_OUTPUT}
+      env:
+        FILE: ${{ inputs.output_file || format('distribution.{0}', inputs.packaging) }}
 
     - name: Download via Maven
       shell: bash
@@ -71,11 +78,16 @@ runs:
           org.apache.maven.plugins:maven-dependency-plugin:2.10:get \
           -DremoteRepositories="${{ steps.get_repo_url.outputs.repo_url }}" \
           -DgroupId="com.hazelcast" \
-          -DartifactId="${{ inputs.distribution }}-distribution" \
-          -Dversion="${{ inputs.hz_version }}" \
-          -Dclassifier="${{ inputs.classifier }}" \
-          -Dpackaging="${{ inputs.packaging }}" \
+          -DartifactId="${DISTRIBUTION}-distribution" \
+          -Dversion="${HZ_VERSION}" \
+          -Dclassifier="${CLASSIFIER}" \
+          -Dpackaging="${PACKAGING}" \
           -Dtransitive=false \
           -Ddest="${{ steps.derive-output-file.outputs.file }}" \
           --batch-mode \
           --no-transfer-progress
+      env:
+        DISTRIBUTION: ${{ inputs.distribution }}
+        HZ_VERSION: ${{ inputs.hz_version }}
+        CLASSIFIER: ${{ inputs.classifier }}
+        PACKAGING: ${{ inputs.packaging }}
