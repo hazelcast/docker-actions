@@ -2,9 +2,8 @@ function __get_tags_descending() {
   local github_repository=$1
 
   # Don't use GH as cross-repo querying doesn't work with default github.token
-  curl --silent "https://api.github.com/repos/${github_repository}/tags?per_page=100" \
-    --paginate \
-    --jq '.[].name | select(startswith("v") and (contains("-") | not))' | \
+  curl --silent "https://api.github.com/repos/${github_repository}/tags?per_page=100" |
+    jq '.[].name | select(startswith("v") and (contains("-") | not))' | \
     sort -V -r
 }
 
