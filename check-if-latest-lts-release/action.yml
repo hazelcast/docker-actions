@@ -1,8 +1,6 @@
 name: Check if latest EE LTS release
 description: Check if latest EE LTS release
 inputs:
-  github_token:
-    required: true
   github_repository_to_query:
     required: true
   hz_version:
@@ -51,7 +49,6 @@ runs:
         echo "version=$(get_last_version_with_file ${GITHUB_REPOSITORY_TO_QUERY} ${IS_LTS_FILE})" >> ${GITHUB_OUTPUT}
       env:
         GITHUB_REPOSITORY_TO_QUERY: ${{ inputs.github_repository_to_query }}
-        GH_TOKEN: ${{ inputs.github_token }}}}
 
     - uses: madhead/semver-utils@latest
       if: env.IS_LTS == 'true'

@@ -15,8 +15,6 @@ jobs:
 
   test-check-if-latest-lts-release:
     uses: ./.github/workflows/test-check-if-latest-lts-release.yml
-    secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test-check-redhat-service-status:
     uses: ./.github/workflows/test-check-redhat-service-status.yml

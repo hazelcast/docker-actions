@@ -1,7 +1,8 @@
 function __get_tags_descending() {
   local github_repository=$1
 
-  gh api repos/${github_repository}/tags \
+  # Don't use GH as cross-repo querying doesn't work with default github.token
+  curl --silent "https://api.github.com/repos/${github_repository}/tags?per_page=100" \
     --paginate \
     --jq '.[].name | select(startswith("v") and (contains("-") | not))' | \
     sort -V -r
@@ -12,8 +13,9 @@ function __file_exists_in_tag() {
   local file=$2
   local tag=$3
  
+  # Don't use GH as cross-repo querying doesn't work with default github.token
   # TODO 2>/dev/null
-  gh api "repos/${github_repository}/contents/${file}?ref=${tag}" --method HEAD
+  curl --silent --HEAD --fail "https://api.github.com/repos/${github_repository}/contents/${file}?ref=${tag}"
 }
 
 function get_last_version_with_file() {
@@ -24,8 +26,6 @@ function get_last_version_with_file() {
   __get_tags_descending "${github_repository}"
 
   for tag in $(__get_tags_descending "${github_repository}" ); do
-    # TODO REMOFVE
-    echo "LOoking at ${tag}"
     if __file_exists_in_tag "${github_repository}" "${file}" "${tag}"; then
       echo "${tag}" | cut -c2-
       return
