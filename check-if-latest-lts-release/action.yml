@@ -1,5 +1,5 @@
 name: Check if latest EE LTS release
-description: Check if latest EE LTS release
+description: Check if latest EE LTS release, expects parent repo to be fully checked out (i.e. not shallow) in the root directory as branch/tags are used for comparisons.
 inputs:
   hz_version:
     description: Version to be released
