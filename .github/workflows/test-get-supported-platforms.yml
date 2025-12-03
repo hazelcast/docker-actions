@@ -24,7 +24,7 @@ jobs:
           dockerfile: ./get-supported-platforms/test-data/hazelcast-enterprise/Dockerfile
           jdk: 11
 
-      - name: Run get-supported-platforms OS JDK11
+      - name: Run get-supported-platforms OS JDK21
         id: platform_os_jdk21
         uses: ./get-supported-platforms
         with:
