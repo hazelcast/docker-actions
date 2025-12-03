@@ -21,7 +21,10 @@ runs:
         source /dev/stdin <<< "$(curl --silent https://raw.githubusercontent.com/hazelcast/hazelcast-docker/refs/heads/master/.github/scripts/version.functions.sh)"
 
         # Pull metadata from 'hazelcast' repo
-        major_minor_lts_version=$(curl --silent https://raw.githubusercontent.com/hazelcast/hazelcast/refs/heads/master/hazelcast-parent/pom.xml | awk -F'[<>]' '/<hazelcast.lts.version>/ { print $3 }')
+        major_minor_lts_version=$( \
+          curl --silent https://raw.githubusercontent.com/hazelcast/hazelcast/refs/heads/master/hazelcast-parent/pom.xml | \
+          awk -F'[<>]' '/<hazelcast.lts.version>/ { print $3 }' \
+        )
 
         if [[ -n "${major_minor_lts_version}" ]]; then
             latest_patch_lts_version=$(get_latest_patch_version "${major_minor_lts_version}")
