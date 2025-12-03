@@ -31,6 +31,8 @@ runs:
 
             if [[ "${latest_patch_lts_version}" == "${{ inputs.hz_version }}" ]]; then
                 echo "is_latest_lts=true" >> $GITHUB_OUTPUT
+            else
+                echo "is_latest_lts=false" >> $GITHUB_OUTPUT
             fi
         else
             echoerr "Failed to extract LTS version from pom.xml"

@@ -50,8 +50,8 @@ jobs:
             assert_eq "$expected" "$actual" "$msg" && log_success "$msg" || TESTS_RESULT=$?
           }
 
-          assert_equals "" "${{ steps.check-if-latest-lts-release-5_5_0.outputs.is_latest_lts }}"
+          assert_equals "false" "${{ steps.check-if-latest-lts-release-5_5_0.outputs.is_latest_lts }}"
           assert_equals "true" "${{ steps.check-if-latest-lts-release-5_5_8.outputs.is_latest_lts }}"
-          assert_equals "" "${{ steps.check-if-latest-lts-release-5_6_0.outputs.is_latest_lts }}"
+          assert_equals "false" "${{ steps.check-if-latest-lts-release-5_6_0.outputs.is_latest_lts }}"
 
           assert_eq 0 "$TESTS_RESULT" "All tests should pass"
