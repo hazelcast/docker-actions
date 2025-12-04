@@ -33,13 +33,8 @@ function assert_version_less_than {
 function assert_get_supported_jdks {
   local HZ_VERSION=$1
   local EXPECTED=$2
-  local MSG="JDK"
-
-  local MSG="$VERSION1 should$([ "$EXPECTED" = "true" ] || echo " NOT") less than $VERSION2"
-  local RESULT
-
-  version_less_than "$VERSION1" "$VERSION2" && RESULT=true || RESULT=false
-  assert_eq "$RESULT" "$EXPECTED" "$MSG"  && log_success "$MSG" || TESTS_RESULT=$?
+  local MSG="JDK versions for $HZ_VERSION should be $EXPECTED"
+  assert_eq "$(get_supported_jdks "$HZ_VERSION")" "$EXPECTED" "$MSG" && log_success "$MSG" || TESTS_RESULT=$?
 }
 
 log_header "Tests for version_less_or_equal"
@@ -80,13 +75,6 @@ assert_version_less_than "5.3.2" "5.3.1" "false"
 assert_version_less_than "4.1.0-BETA-1" "4.1.0" "true"
 assert_version_less_than "5.4.0-DEVEL-1" "5.4.0" "true"
 assert_version_less_than "5.4.0" "5.4.0-DEVEL-1" "false"
-
-function assert_get_supported_jdks {
-  local HZ_VERSION=$1
-  local EXPECTED=$2
-  local MSG="JDK versions for $HZ_VERSION should be $EXPECTED"
-  assert_eq "$(get_supported_jdks "$HZ_VERSION")" "$EXPECTED" "$MSG" && log_success "$MSG" || TESTS_RESULT=$?
-}
 
 log_header "Tests for get_supported_jdks"
 assert_get_supported_jdks "5.3.9" "['11', '17']"
