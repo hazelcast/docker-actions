@@ -18,7 +18,9 @@ runs:
       id: get-supported-jdks
       run: |
         source ${GITHUB_ACTION_PATH}/get-supported-jdks.functions.sh
-        echo "jdks=$(get_supported_jdks ${{ inputs.HZ_VERSION}} )" >> ${GITHUB_OUTPUT}
+        echo "jdks=$(get_supported_jdks ${HZ_VERSION} )" >> ${GITHUB_OUTPUT}
+      env:
+        HZ_VERSION: ${{ inputs.HZ_VERSION}}
 
     - shell: bash
       id: get-default-jdk

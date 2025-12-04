@@ -13,7 +13,7 @@ jobs:
           - hazelcast-enterprise
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Download "${{ matrix.distribution }}"
         uses: ./download-hz-dist
