@@ -10,9 +10,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Test scripts
-        run: .github/scripts/test_scripts.sh
-
   test-check-base-images:
     uses: ./.github/workflows/test-check-base-images.yml
 
@@ -41,7 +38,6 @@ jobs:
   assert-all-jobs-succeeded:
     runs-on: ubuntu-latest
     needs:
-      - test-scripts
       - test-check-base-images
       - test-check-redhat-service-status
       - test-download-hz-dist

@@ -31,7 +31,7 @@ runs:
       run: |
         . ${GITHUB_ACTION_PATH}/../.github/scripts/logging.functions.sh
         pushd ${GITHUB_ACTION_PATH}/..
-          . .github/scripts/check-base-images.functions.sh
+          . check-base-images/check-base-images.functions.sh
         popd
 
         echodebug "Checking ${IMAGE}"
