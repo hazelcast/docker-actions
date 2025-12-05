@@ -1,5 +1,7 @@
 # shellcheck source=../.github/scripts/logging.functions.sh
 . .github/scripts/logging.functions.sh
+# shellcheck source=../.github/scripts/dockerfile.functions.sh
+. .github/scripts/dockerfile.functions.sh
 
 # Determine if the packages in the specified image are updatable
 # Returns exit code:
@@ -53,16 +55,6 @@ function packages_updatable() {
     echoerr "Unsupported base image: ${base_image}"
     exit 1
   fi
-}
-
-# Returns the base image of the specified Dockerfile
-function get_base_image_name() {
-  local dockerfile=$1
-
-  # Read the last `FROM` line
-  local line
-  line=$(grep '^FROM ' "${dockerfile}" | tail -n 1)
-  cut -d' ' -f2 <<< "${line}"
 }
 
 # Determine if the specified image is outdated when compared to it's base image
