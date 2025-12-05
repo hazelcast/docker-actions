@@ -17,7 +17,7 @@ runs:
       id: get-supported
       run: |
         . ${GITHUB_ACTION_PATH}/../.github/scripts/logging.functions.sh
-        . ${GITHUB_ACTION_PATH}/../check-base-images/check-base-images.functions.sh
+        . ${GITHUB_ACTION_PATH}/../.github/scripts/check-base-images.functions.sh
         . ${GITHUB_ACTION_PATH}/docker.functions.sh
 
         base_image_name=$(get_base_image_name ${DOCKERFILE})

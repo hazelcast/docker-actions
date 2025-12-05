@@ -10,9 +10,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Test scripts
-        run: ./check-base-images/test_scripts.sh
-
       - name: Run check-base-images OSS
         id: check-base-images-oss
         uses: ./check-base-images
