@@ -1,0 +1,40 @@
+name: Check if latest EE LTS release
+description: Check if latest EE LTS release, expects parent repo to be fully checked out (i.e. not shallow) in the root directory as branch/tags are used for comparisons.
+inputs:
+  hz_version:
+    description: Version to be released
+    required: true
+outputs:
+  is_latest_lts:
+    value: ${{ steps.is_latest_lts.outputs.is_latest_lts }}
+    description: Returns 'true' if the release if the latest LTS
+runs:
+  using: "composite"
+  steps:
+    - name: Check if latest EE LTS release
+      id: is_latest_lts
+      shell: bash
+      run: |
+        set -euo pipefail ${RUNNER_DEBUG:+-x}
+
+        source ${GITHUB_ACTION_PATH}/../.github/scripts/logging.functions.sh
+        source /dev/stdin <<< "$(curl --silent https://raw.githubusercontent.com/hazelcast/hazelcast-docker/refs/heads/master/.github/scripts/version.functions.sh)"
+
+        # Pull metadata from 'hazelcast' repo
+        major_minor_lts_version=$( \
+          curl --silent https://raw.githubusercontent.com/hazelcast/hazelcast/refs/heads/master/hazelcast-parent/pom.xml | \
+          awk -F'[<>]' '/<hazelcast.lts.version>/ { print $3 }' \
+        )
+
+        if [[ -n "${major_minor_lts_version}" ]]; then
+            latest_patch_lts_version=$(get_latest_patch_version "${major_minor_lts_version}")
+
+            if [[ "${latest_patch_lts_version}" == "${{ inputs.hz_version }}" ]]; then
+                echo "is_latest_lts=true" >> $GITHUB_OUTPUT
+            else
+                echo "is_latest_lts=false" >> $GITHUB_OUTPUT
+            fi
+        else
+            echoerr "Failed to extract LTS version from pom.xml"
+            exit 1
+        fi
