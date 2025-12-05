@@ -17,17 +17,21 @@ runs:
       id: get-supported
       run: |
         . ${GITHUB_ACTION_PATH}/../.github/scripts/logging.functions.sh
-        . ${GITHUB_ACTION_PATH}/../check-base-images/check-base-images.functions.sh
-        . ${GITHUB_ACTION_PATH}/docker.functions.sh
+        . ${GITHUB_ACTION_PATH}/../.github/scripts/dockerfile.functions.sh
 
         base_image_name=$(get_base_image_name ${DOCKERFILE})
 
         case "${base_image_name}" in
             *"alpine"*)
-              echo "platforms=$(get_alpine_supported_platforms ${JDK})" >> ${GITHUB_OUTPUT}
+              PLATFORMS="linux/arm64,linux/amd64,linux/s390x"
+              # already fixed on alpine:edge, probably will be released in alpine:3.20
+              if [[ "${JDK}" -lt 17 ]]; then
+                PLATFORMS="${PLATFORMS},linux/ppc64le"
+              fi
+              echo "platforms=${PLATFORMS}" >> ${GITHUB_OUTPUT}
             ;;
             *"ubi"*)
-              echo "platforms=$(get_ubi_supported_platforms ${JDK})" >> ${GITHUB_OUTPUT}
+              echo "platforms=linux/arm64,linux/amd64,linux/s390x,linux/ppc64le" >> ${GITHUB_OUTPUT}
             ;;
             *)
             echoerr "Unsupported platform behaviour for ${base_image_name}" ; return 1
