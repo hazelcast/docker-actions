@@ -22,6 +22,9 @@ jobs:
   test-download-hz-dist:
     uses: ./.github/workflows/test-download-hz-dist.yml
 
+  test-get-distribution-classifiers:
+    uses: ./.github/workflows/test-get-distribution-classifiers.yml
+
   test-get-hz-versions:
     uses: ./.github/workflows/test-get-hz-versions.yml
 
@@ -45,6 +48,7 @@ jobs:
       - test-check-if-latest-lts-release
       - test-check-redhat-service-status
       - test-download-hz-dist
+      - test-get-distribution-classifiers
       - test-get-hz-versions
       - test-get-supported-jdks
       - test-get-supported-platforms

@@ -1,0 +1,28 @@
+name: Test get-distribution-classifiers action
+
+on:
+  workflow_call:
+
+jobs:
+  get:
+    outputs:
+      distribution-classifiers: ${{ steps.distribution-classifiers.outputs.classifiers }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - id: distribution-classifiers
+        uses: ./get-distribution-classifiers
+
+  # Doesn't explicitly assert, but validates that the output is valid for matrix consumption
+  test:
+    runs-on: ubuntu-latest
+    needs:
+      - get
+    strategy:
+      matrix:
+        classifier: ${{ fromJSON(needs.get.outputs.distribution-classifiers) }}
+    steps:
+      - run: echo "classifier=${{ matrix.classifier }}"
+
