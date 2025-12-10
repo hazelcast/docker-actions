@@ -41,6 +41,10 @@ jobs:
     uses: ./.github/workflows/test-slack-notification.yml
     secrets: inherit
 
+  test-test-image-size:
+    uses: ./.github/workflows/test-test-image-size.yml
+    secrets: inherit
+
   assert-all-jobs-succeeded:
     runs-on: ubuntu-latest
     needs:
@@ -54,6 +58,7 @@ jobs:
       - test-get-supported-platforms
       - test-resolve-editions
       - test-slack-notification
+      - test-test-image-size
     if: always()
     steps:
       - name: Check all jobs succeeded
