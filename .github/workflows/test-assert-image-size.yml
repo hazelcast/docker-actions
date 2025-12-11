@@ -1,0 +1,19 @@
+name: Test assert-image-size action
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Test scripts
+        run: ./assert-image-size/test_scripts.sh
+
+      - name: Run assert-image-size
+        uses: ./assert-image-size
+        with:
+          image: hazelcast/hazelcast:5.0.1-slim
