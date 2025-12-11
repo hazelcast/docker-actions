@@ -15,9 +15,9 @@ runs:
   steps:
     - shell: bash
       run: |
-        . ${GITHUB_ACTION_PATH}/test-image-size.functions.sh
+        . ${GITHUB_ACTION_PATH}/assert-image-size.functions.sh
 
-        test_image_size "${IMAGE}" "${MINIMUM_EFFICIENCY}"
+        assert_image_size "${IMAGE}" "${MINIMUM_EFFICIENCY}"
       env:
         IMAGE: ${{ inputs.image }}
         MINIMUM_EFFICIENCY: ${{ inputs.minimum_efficiency }}

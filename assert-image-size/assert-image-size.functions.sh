@@ -1,4 +1,4 @@
-function test_image_size() {
+function assert_image_size() {
   local image=$1
   local minimum_efficiency=$2
 

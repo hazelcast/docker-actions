@@ -1,4 +1,4 @@
-# test-image-size
+# assert-image-size
 
 A GitHub Action that validates image isn't excessively large / wasting space using [`dive`](https://github.com/wagoodman/dive).
 

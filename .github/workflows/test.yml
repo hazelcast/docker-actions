@@ -10,6 +10,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+  test-assert-image-size:
+    uses: ./.github/workflows/test-assert-image-size.yml
+    secrets: inherit
+
   test-check-base-images:
     uses: ./.github/workflows/test-check-base-images.yml
 
@@ -41,13 +45,10 @@ jobs:
     uses: ./.github/workflows/test-slack-notification.yml
     secrets: inherit
 
-  test-test-image-size:
-    uses: ./.github/workflows/test-test-image-size.yml
-    secrets: inherit
-
   assert-all-jobs-succeeded:
     runs-on: ubuntu-latest
     needs:
+      - test-assert-image-size
       - test-check-base-images
       - test-check-if-latest-lts-release
       - test-check-redhat-service-status
@@ -58,7 +59,6 @@ jobs:
       - test-get-supported-platforms
       - test-resolve-editions
       - test-slack-notification
-      - test-test-image-size
     if: always()
     steps:
       - name: Check all jobs succeeded
