@@ -8,7 +8,7 @@ inputs:
   minimum_efficiency:
     description: Minimum efficiency percentage required - 0-1 scale
     required: false
-    default: 0.95
+    default: 0.8
 
 runs:
   using: "composite"
