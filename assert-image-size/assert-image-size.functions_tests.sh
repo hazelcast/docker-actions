@@ -25,5 +25,8 @@ log_header "Tests for assert_image_size"
 # expected efficiency: 99.8541 %
 assert_assert_image_size hazelcast/hazelcast:5.0.1-slim 0.95 0
 assert_assert_image_size hazelcast/hazelcast:5.0.1-slim 0.99999999999 1
+# expected efficiency: 97 %
+assert_assert_image_size hazelcast/hazelcast-enterprise:5.0.1-slim 0.95 0
+assert_assert_image_size hazelcast/hazelcast-enterprise:5.0.1-slim 0.99999999999 1
 
 assert_eq 0 "$TESTS_RESULT" "All tests should pass"
