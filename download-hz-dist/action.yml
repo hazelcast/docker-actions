@@ -3,6 +3,12 @@ inputs:
   repo-vars-as-json:
     description: 'Repo Vars as JSON - not inherited in composite actions - see https://github.com/orgs/community/discussions/49689#discussioncomment-6398261'
     required: true
+  aws-role-to-assume:
+    description: 'AWS Role to assume for accessing secrets'
+    required: true
+  maven-settings-path:
+    description: 'Override default Maven settings.xml location'
+    required: false
   distribution:
     description: 'Distribution type: "hazelcast" or "hazelcast-enterprise"'
     required: true
@@ -28,6 +34,12 @@ outputs:
 runs:
   using: "composite"
   steps:
+      # Should be a relative local path, but doesn't resolve when called from another repo
+    - uses: hazelcast/docker-actions/authenticate-maven-snapshot-internal@authenticate-with-oidc
+      with:
+        aws-role-to-assume: ${{ inputs.aws-role-to-assume }}
+        maven-settings-path: ${{ inputs.maven-settings-path }}
+
     - name: Get repository URL
       id: get_repo_url
       shell: bash

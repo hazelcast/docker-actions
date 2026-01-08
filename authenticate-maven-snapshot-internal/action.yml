@@ -1,0 +1,40 @@
+name: Authenticate against Maven `snapshot-internal` repository
+inputs:
+  aws-role-to-assume:
+    description: 'AWS Role to assume for accessing secrets'
+    required: true
+  maven-settings-path:
+    description: 'Override default Maven settings.xml location'
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - uses: aws-actions/configure-aws-credentials@v5
+      with:
+        role-to-assume: ${{ inputs.aws-role-to-assume }}
+        aws-region: 'us-east-1'
+
+    - uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      with:
+        # Make them quasi-unique to avoid overlapping with other secrets that may exist in the calling workflow
+        # Workaround lack of https://github.com/aws-actions/aws-secretsmanager-get-secrets/issues/14
+        secret-ids: |
+          AUTHENTICATE_MAVEN_SNAPSHOT_INTERNAL_JFROG,JFROG
+        parse-json-secrets: true
+
+    - id: jfrog
+      uses: jfrog/setup-jfrog-cli@v4
+      env:
+        JF_URL: https://${{ env.AUTHENTICATE_MAVEN_SNAPSHOT_INTERNAL_JFROG_URL }}
+      with:
+        oidc-provider-name: ${{ github.repository_owner }}-snapshot-internal
+
+    - uses: s4u/maven-settings-action@894661b3ddae382f1ae8edbeab60987e08cf0788 # v4.0.0
+      with:
+        path: ${{ inputs.maven-settings-path }}
+        servers: |
+          [{
+              "id": "snapshot-internal",
+              "username": "${{ steps.jfrog.outputs.oidc-user }}",
+              "password": "${{ steps.jfrog.outputs.oidc-token }}"
+          }]

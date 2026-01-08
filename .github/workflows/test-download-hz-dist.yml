@@ -6,6 +6,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     strategy:
       matrix:
         distribution:
@@ -20,6 +22,7 @@ jobs:
         id: download
         with:
           repo-vars-as-json: "{\n  \"MAVEN_EE_RELEASE_REPO\": \"https://repository.hazelcast.com/release\",\n  \"MAVEN_OSS_RELEASE_REPO\": \" \"\n}"
+          aws-role-to-assume: ${{ secrets.AWS_HAZELCAST_OIDC_GITHUB_ACTIONS_ROLE_ARN }}
           distribution: "${{ matrix.distribution }}"
           hz_version: "5.0"
           classifier: "slim"
