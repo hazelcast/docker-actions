@@ -25,6 +25,7 @@ jobs:
 
   test-download-hz-dist:
     uses: ./.github/workflows/test-download-hz-dist.yml
+    secrets: inherit
 
   test-get-distribution-classifiers:
     uses: ./.github/workflows/test-get-distribution-classifiers.yml
