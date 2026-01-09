@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  test:
+  test-public:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -25,6 +25,32 @@ jobs:
           aws-role-to-assume: ${{ secrets.AWS_HAZELCAST_OIDC_GITHUB_ACTIONS_ROLE_ARN }}
           distribution: "${{ matrix.distribution }}"
           hz_version: "5.0"
+          classifier: "slim"
+          packaging: "tar.gz"
+
+      - name: Check file exists
+        run: |
+          if [[ ! -f "${{ steps.download.outputs.output_file }}" ]]; then
+            echo "${{ steps.download.outputs.output_file }} not found!"
+            exit 1
+          fi
+
+  test-private:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Download
+        uses: ./download-hz-dist
+        id: download
+        with:
+          repo-vars-as-json: "{\n  \"MAVEN_OSS_SNAPSHOT_REPO\": \"snapshot-internal::::https://repository.hazelcast.com/snapshot-internal\",\n  \"MAVEN_OSS_RELEASE_REPO\": \" \"\n}"
+          aws-role-to-assume: ${{ secrets.AWS_HAZELCAST_OIDC_GITHUB_ACTIONS_ROLE_ARN }}
+          distribution: hazelcast
+          hz_version: "5.6.1-SNAPSHOT"
           classifier: "slim"
           packaging: "tar.gz"
 
