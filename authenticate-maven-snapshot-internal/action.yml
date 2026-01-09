@@ -26,7 +26,7 @@ runs:
     - id: jfrog
       uses: jfrog/setup-jfrog-cli@v4
       env:
-        JF_URL: https://${{ env.AUTHENTICATE_MAVEN_SNAPSHOT_INTERNAL_JFROG_URL }}
+        JF_URL: https://repository.hazelcast.com
       with:
         oidc-provider-name: ${{ github.repository_owner }}-snapshot-internal
 
