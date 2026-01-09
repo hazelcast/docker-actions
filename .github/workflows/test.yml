@@ -42,6 +42,10 @@ jobs:
   test-resolve-editions:
     uses: ./.github/workflows/test-resolve-editions.yml
 
+  test-setup-maven-snapshot-internal:
+    uses: ./.github/workflows/test-setup-maven-snapshot-internal.yml
+    secrets: inherit
+
   test-slack-notification:
     uses: ./.github/workflows/test-slack-notification.yml
     secrets: inherit
@@ -59,6 +63,7 @@ jobs:
       - test-get-supported-jdks
       - test-get-supported-platforms
       - test-resolve-editions
+      - test-setup-maven-snapshot-internal
       - test-slack-notification
     if: always()
     steps:
