@@ -1,4 +1,4 @@
-name: Authenticate against Maven `snapshot-internal` repository
+name: Set up Maven for `snapshot-internal` repository with authentication
 inputs:
   aws-role-to-assume:
     description: 'AWS Role to assume for accessing secrets'
@@ -19,13 +19,13 @@ runs:
         # Make them quasi-unique to avoid overlapping with other secrets that may exist in the calling workflow
         # Workaround lack of https://github.com/aws-actions/aws-secretsmanager-get-secrets/issues/14
         secret-ids: |
-          AUTHENTICATE_MAVEN_SNAPSHOT_INTERNAL_JFROG,JFROG
+          SETUP_MAVEN_SNAPSHOT_INTERNAL_JFROG,JFROG
         parse-json-secrets: true
 
     - id: jfrog
       uses: jfrog/setup-jfrog-cli@v4
       env:
-        JF_URL: https://${{ env.AUTHENTICATE_MAVEN_SNAPSHOT_INTERNAL_JFROG_URL }}
+        JF_URL: https://${{ env.SETUP_MAVEN_SNAPSHOT_INTERNAL_JFROG_URL }}
       with:
         oidc-provider-name: ${{ github.repository_owner }}-snapshot-internal
 

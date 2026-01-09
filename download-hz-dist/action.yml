@@ -75,7 +75,7 @@ runs:
         HZ_VERSION: ${{ inputs.hz_version }}
 
       # Should be a relative local path, but doesn't resolve when called from another repo
-    - uses: hazelcast/docker-actions/authenticate-maven-snapshot-internal@authenticate-with-oidc
+    - uses: hazelcast/docker-actions/setup-maven-snapshot-internal@authenticate-with-oidc
       if: ${{ steps.get_repo_url.outputs.authentication-required == 'true' }}
       with:
         aws-role-to-assume: ${{ inputs.aws-role-to-assume }}
