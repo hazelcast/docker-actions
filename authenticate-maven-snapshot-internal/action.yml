@@ -4,7 +4,7 @@ inputs:
     description: 'AWS Role to assume for accessing secrets'
     required: true
   maven-settings-path:
-    description: 'Override default Maven settings.xml location'
+    description: 'Override default Maven settings.xml location e.g. /usr/share/maven/conf/settings.xml'
     required: false
 runs:
   using: "composite"
