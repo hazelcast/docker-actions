@@ -3,6 +3,12 @@ inputs:
   repo-vars-as-json:
     description: 'Repo Vars as JSON - not inherited in composite actions - see https://github.com/orgs/community/discussions/49689#discussioncomment-6398261'
     required: true
+  aws-role-to-assume:
+    description: 'AWS Role to assume for accessing secrets'
+    required: true
+  maven-settings-path:
+    description: 'Override default Maven settings.xml location'
+    required: false
   distribution:
     description: 'Distribution type: "hazelcast" or "hazelcast-enterprise"'
     required: true
@@ -58,10 +64,22 @@ runs:
         # Lookup up the value of the selected key in "repo-vars-as-json"
         REPO_URL=$(jq --raw-output .${repo_var_name} <<< "${REPO_VARS_AS_JSON}")
         echo "repo_url=${REPO_URL}" >> ${GITHUB_OUTPUT}
+
+        # Detect if the repo definition specifies authentication via a Maven server (e.g. "my-private-repo::::https://example.com/private-repo")
+        if [[ "${REPO_URL}" == *[!:]::::* ]]; then
+          echo "authentication-required=true" >> ${GITHUB_OUTPUT}
+        fi
       env:
         REPO_VARS_AS_JSON: ${{ inputs.repo-vars-as-json }}
         DISTRIBUTION: ${{ inputs.distribution }}
         HZ_VERSION: ${{ inputs.hz_version }}
+
+      # Should be a relative local path, but doesn't resolve when called from another repo
+    - uses: hazelcast/docker-actions/setup-maven-snapshot-internal@master
+      if: ${{ steps.get_repo_url.outputs.authentication-required == 'true' }}
+      with:
+        aws-role-to-assume: ${{ inputs.aws-role-to-assume }}
+        maven-settings-path: ${{ inputs.maven-settings-path }}
 
     - name: Derive output file
       id: derive-output-file
