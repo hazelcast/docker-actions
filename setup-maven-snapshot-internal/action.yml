@@ -9,25 +9,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: aws-actions/configure-aws-credentials@v5
+      # Should be a relative local path, but doesn't resolve when called from another repo
+    - uses: hazelcast/docker-actions/get-jfrog-credentials@expose-jfrog-credentials
+      id: jfrog
       with:
-        role-to-assume: ${{ inputs.aws-role-to-assume }}
-        aws-region: 'us-east-1'
-
-    - uses: aws-actions/aws-secretsmanager-get-secrets@v2
-      with:
-        # Make them quasi-unique to avoid overlapping with other secrets that may exist in the calling workflow
-        # Workaround lack of https://github.com/aws-actions/aws-secretsmanager-get-secrets/issues/14
-        secret-ids: |
-          SETUP_MAVEN_SNAPSHOT_INTERNAL_JFROG,JFROG
-        parse-json-secrets: true
-
-    - id: jfrog
-      uses: jfrog/setup-jfrog-cli@v4
-      env:
-        JF_URL: https://${{ env.SETUP_MAVEN_SNAPSHOT_INTERNAL_JFROG_URL }}
-      with:
-        oidc-provider-name: ${{ github.repository_owner }}-snapshot-internal
+        aws-role-to-assume: ${{ inputs.aws-role-to-assume }}
+        jfrog-oidc-provider-name: ${{ github.repository_owner }}-snapshot-internal
 
     - uses: s4u/maven-settings-action@894661b3ddae382f1ae8edbeab60987e08cf0788 # v4.0.0
       with:
@@ -35,6 +22,6 @@ runs:
         servers: |
           [{
               "id": "snapshot-internal",
-              "username": "${{ steps.jfrog.outputs.oidc-user }}",
-              "password": "${{ steps.jfrog.outputs.oidc-token }}"
+              "username": "${{ steps.jfrog.outputs.user }}",
+              "password": "${{ steps.jfrog.outputs.token }}"
           }]
