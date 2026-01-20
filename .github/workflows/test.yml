@@ -33,6 +33,10 @@ jobs:
   test-get-hz-versions:
     uses: ./.github/workflows/test-get-hz-versions.yml
 
+  test-get-jfrog-credentials:
+    uses: ./.github/workflows/test-get-jfrog-credentials.yml
+    secrets: inherit
+
   test-get-supported-jdks:
     uses: ./.github/workflows/test-get-supported-jdks.yml
 
@@ -60,6 +64,7 @@ jobs:
       - test-download-hz-dist
       - test-get-distribution-classifiers
       - test-get-hz-versions
+      - test-get-jfrog-credentials
       - test-get-supported-jdks
       - test-get-supported-platforms
       - test-resolve-editions
