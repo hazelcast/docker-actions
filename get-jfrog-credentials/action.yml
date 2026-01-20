@@ -7,8 +7,8 @@ inputs:
     description: 'JFrog provider to authenticate against'
     required: true
 outputs:
-  jfrog-url:
-    value: ${{ steps.get-url.outputs.jfrog-url }}
+  url:
+    value: ${{ steps.get-url.outputs.url }}
   user:
     value: ${{ steps.jfrog.outputs.oidc-user }}
   token:
@@ -32,7 +32,7 @@ runs:
     - id: get-url
       shell: bash
       run: |
-        echo "jfrog-url=${GET_JFROG_CREDENTIALS_JFROG_URL}" >> ${GITHUB_OUTPUT}
+        echo "url=${GET_JFROG_CREDENTIALS_JFROG_URL}" >> ${GITHUB_OUTPUT}
 
     - id: jfrog
       uses: jfrog/setup-jfrog-cli@v4
