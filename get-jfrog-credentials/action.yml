@@ -21,22 +21,28 @@ runs:
         role-to-assume: ${{ inputs.aws-role-to-assume }}
         aws-region: 'us-east-1'
 
+      # GitHub has no way of uniquely identifying steps within a job, so we must generate a random ID for this invocation
+    - id: get-random-id
+      shell: bash
+      run: |
+        echo "id=${RANDOM}" >> ${GITHUB_OUTPUT}
+
     - uses: aws-actions/aws-secretsmanager-get-secrets@v2
       with:
         # Make them quasi-unique to avoid overlapping with other secrets that may exist in the calling workflow
         # Workaround lack of https://github.com/aws-actions/aws-secretsmanager-get-secrets/issues/14
         secret-ids: |
-          GET_JFROG_CREDENTIALS_JFROG,JFROG
+          GET_JFROG_CREDENTIALS_${{ steps.get-random-id.outputs.id }}_JFROG,JFROG
         parse-json-secrets: true
 
     - id: get-url
       shell: bash
       run: |
-        echo "url=${GET_JFROG_CREDENTIALS_JFROG_URL}" >> ${GITHUB_OUTPUT}
+        echo "url=${GET_JFROG_CREDENTIALS_${{ steps.get-random-id.outputs.id }}_JFROG_URL}" >> ${GITHUB_OUTPUT}
 
     - id: jfrog
       uses: jfrog/setup-jfrog-cli@v4
       env:
-        JF_URL: https://${{ env.GET_JFROG_CREDENTIALS_JFROG_URL }}
+        JF_URL: https://${{ steps.get-url.outputs.url }}
       with:
         oidc-provider-name: ${{ inputs.jfrog-oidc-provider-name }}
