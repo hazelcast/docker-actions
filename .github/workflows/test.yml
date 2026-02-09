@@ -43,6 +43,9 @@ jobs:
   test-get-supported-platforms:
     uses: ./.github/workflows/test-get-supported-platforms.yml
 
+  test-get-tag-name:
+    uses: ./.github/workflows/test-get-tag-name.yml
+
   test-resolve-editions:
     uses: ./.github/workflows/test-resolve-editions.yml
 
@@ -67,6 +70,7 @@ jobs:
       - test-get-jfrog-credentials
       - test-get-supported-jdks
       - test-get-supported-platforms
+      - test-get-tag-name
       - test-resolve-editions
       - test-setup-maven-snapshot-internal
       - test-slack-notification

@@ -1,0 +1,16 @@
+name: Test get-tag-name action
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Run get-tag-name
+        uses: ./get-tag-name
+        with:
+          VERSION: "5.4.1"

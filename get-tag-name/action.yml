@@ -1,0 +1,13 @@
+name: Get tag name from version
+
+inputs:
+  VERSION:
+    required: true
+outputs:
+  TAG_NAME:
+    value: v${{ inputs.VERSION }}
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: exit 0
