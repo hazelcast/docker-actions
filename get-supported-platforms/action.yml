@@ -23,7 +23,7 @@ runs:
 
         case "${base_image_name}" in
             *"alpine"*)
-              PLATFORMS="linux/arm64,linux/amd64,linux/s390x"
+              PLATFORMS="linux/arm64,linux/amd64"
               # already fixed on alpine:edge, probably will be released in alpine:3.20
               if [[ "${JDK}" -lt 17 ]]; then
                 PLATFORMS="${PLATFORMS},linux/ppc64le"
