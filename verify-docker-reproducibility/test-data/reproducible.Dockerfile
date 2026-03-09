@@ -1,1 +1,2 @@
-FROM alpine:3.20
+FROM alpine:latest
+USER nobody
