@@ -15,7 +15,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-if [ "$#" -lt 1 ]; then
+if [[ "$#" -lt 1 ]]; then
     echo "Verifies Docker image build reproducibility by building twice and comparing layer digests."
     echo "Exits 0 if all layers are identical across both builds, 1 if any differ."
     echo ""
