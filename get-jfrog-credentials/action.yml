@@ -41,7 +41,7 @@ runs:
         echo "url=${GET_JFROG_CREDENTIALS_${{ steps.get-random-id.outputs.id }}_JFROG_URL}" >> ${GITHUB_OUTPUT}
 
     - id: jfrog
-      uses: jfrog/setup-jfrog-cli@v4
+      uses: jfrog/setup-jfrog-cli@v5
       env:
         JF_URL: https://${{ steps.get-url.outputs.url }}
       with:
