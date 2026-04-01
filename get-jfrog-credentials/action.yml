@@ -27,7 +27,7 @@ runs:
       run: |
         echo "id=${RANDOM}" >> ${GITHUB_OUTPUT}
 
-    - uses: aws-actions/aws-secretsmanager-get-secrets@v2
+    - uses: aws-actions/aws-secretsmanager-get-secrets@v3
       with:
         # Make them quasi-unique to avoid overlapping with other secrets that may exist in the calling workflow
         # Workaround lack of https://github.com/aws-actions/aws-secretsmanager-get-secrets/issues/14
