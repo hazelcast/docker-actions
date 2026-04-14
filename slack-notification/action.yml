@@ -1,5 +1,4 @@
 name: Slack notification
-description: Slack notification
 inputs:
   slack-webhook-url:
     description: Slack webhook url
@@ -13,11 +12,24 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: 8398a7/action-slack@77eaa4f1c608a7d68b38af4e3f739dcd8cba273e # v3.19.0
-      id: slack_notification
+    - id: compute
+      shell: bash
+      run: |
+        STATUS=${{ inputs.status || job.status }}
+        echo "status=${STATUS}" >> ${GITHUB_OUTPUT}
+
+        JOB_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+        if [[ "${STATUS}" == "success" ]]; then
+          echo "text=✅ \`${{ github.workflow }}\` (\`${{ github.workflow_ref }}\`)\n${JOB_URL}" >> ${GITHUB_OUTPUT}
+        else
+          echo "text=❌ \`${{ github.workflow }}\` (\`${{ github.workflow_ref }}\`) - ${STATUS}\n${JOB_URL}" >> ${GITHUB_OUTPUT}
+        fi
+
+    - uses: slackapi/slack-github-action@af78098f536edbc4de71162a307590698245be95 # v3.0.1
       with:
-        fields: all
-        status: ${{ inputs.status || job.status }}
-        channel: ${{ inputs.slack-channel }}
-      env:
-        SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook-url }}
+        webhook: ${{ inputs.slack-webhook-url }}
+        webhook-type: incoming-webhook
+        payload: |
+          channel: "${{ inputs.slack-channel }}"
+          text: "${{ steps.compute.outputs.text }}"
