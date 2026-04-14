@@ -5,13 +5,20 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
+    strategy:
+      matrix:
+        status:
+          - ''
+          - success
+          - failure
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Run action
+      - name: Run action (status="${{ matrix.status }}")
         uses: ./slack-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           slack-channel: "#test-channel"
+          status: ${{ matrix.status }}
