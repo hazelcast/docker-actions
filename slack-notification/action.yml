@@ -15,7 +15,6 @@ runs:
     - id: compute
       shell: bash
       run: |
-        STATUS=${{ inputs.status || job.status }}
         echo "status=${STATUS}" >> ${GITHUB_OUTPUT}
 
         JOB_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -25,6 +24,8 @@ runs:
         else
           echo "text=❌ \`${{ github.workflow }}\` (\`${{ github.workflow_ref }}\`) - ${STATUS}\n${JOB_URL}" >> ${GITHUB_OUTPUT}
         fi
+      env:
+        STATUS: ${{ inputs.status || job.status }}
 
     - uses: slackapi/slack-github-action@af78098f536edbc4de71162a307590698245be95 # v3.0.1
       with:
