@@ -20,9 +20,9 @@ runs:
         JOB_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
         if [[ "${STATUS}" == "success" ]]; then
-          echo "text=✅ \`${{ github.workflow }}\` (\`${{ github.workflow_ref }}\`)\n${JOB_URL}" >> ${GITHUB_OUTPUT}
+          echo "text=✅ \`${GITHUB_WORKFLOW}\` (\`${GITHUB_WORKFLOW_REF}\`)\n${JOB_URL}" >> ${GITHUB_OUTPUT}
         else
-          echo "text=❌ \`${{ github.workflow }}\` (\`${{ github.workflow_ref }}\`) - ${STATUS}\n${JOB_URL}" >> ${GITHUB_OUTPUT}
+          echo "text=❌ \`${GITHUB_WORKFLOW}\` (\`${GITHUB_WORKFLOW_REF}\`) - ${STATUS}\n${JOB_URL}" >> ${GITHUB_OUTPUT}
         fi
       env:
         STATUS: ${{ inputs.status || job.status }}
