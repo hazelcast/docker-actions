@@ -1,0 +1,22 @@
+name: Test slack-notification action
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-slim
+    steps:
+      - run: exit 1
+
+  failure-notifications:
+    name: Failure notification
+    needs: test
+    if: failure()
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./slack-notification
+        with:
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          slack-channel: "#test-channel"

@@ -15,6 +15,8 @@ runs:
     - id: compute
       shell: bash
       run: |
+        set -o errexit -o nounset -o pipefail ${RUNNER_DEBUG:+-x}
+
         echo "status=${STATUS}" >> ${GITHUB_OUTPUT}
 
         JOB_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
