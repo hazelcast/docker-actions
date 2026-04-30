@@ -15,12 +15,35 @@ runs:
   using: "composite"
   steps:
     - shell: bash
+      id: normalize-version
+      run: |
+        # Strip any pre-release metadata 
+        echo "version=${HZ_VERSION%%-*}" >> ${GITHUB_OUTPUT}
+      env:
+        HZ_VERSION: ${{ inputs.HZ_VERSION }}
+
+    - id: compare-version-to-5_4
+      uses: madhead/semver-utils@36d1e0ed361bd7b4b77665de8093092eaeabe6ba # v4.3.0
+      with:
+        version: ${{ steps.normalize-version.outputs.version }}
+        compare-to: 5.4.0
+
+    - id: compare-version-to-5_7
+      uses: madhead/semver-utils@36d1e0ed361bd7b4b77665de8093092eaeabe6ba # v4.3.0
+      with:
+        version: ${{ steps.normalize-version.outputs.version }}
+        compare-to: 5.7.0
+
+    - shell: bash
       id: get-supported-jdks
       run: |
-        source ${GITHUB_ACTION_PATH}/get-supported-jdks.functions.sh
-        echo "jdks=$(get_supported_jdks ${HZ_VERSION} )" >> ${GITHUB_OUTPUT}
-      env:
-        HZ_VERSION: ${{ inputs.HZ_VERSION}}
+        if [[ "${{ steps.compare-version-to-5_4.outputs.comparison-result }}" == "<" ]]; then
+          echo "jdks=['11', '17']" >> ${GITHUB_OUTPUT}
+        elif [[ "${{ steps.compare-version-to-5_7.outputs.comparison-result }}" == "<" ]]; then
+          echo "jdks=['17', '21']" >> ${GITHUB_OUTPUT}
+        else
+          echo "jdks=['17', '21', '25']" >> ${GITHUB_OUTPUT}
+        fi
 
     - shell: bash
       id: get-default-jdk
