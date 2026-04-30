@@ -46,8 +46,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Run get-supported-jdks
-        id: jdks
+      - id: jdks
         uses: ./get-supported-jdks
         with:
           HZ_VERSION: ${{ matrix.hz-version }}
