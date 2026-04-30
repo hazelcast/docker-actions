@@ -5,57 +5,70 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - hz-version: 4.2.8
+            expected-jdks: "['11', '17']"
+            expected-default-jdk: 17
+
+          - hz-version: 5.3.8
+            expected-jdks: "['11', '17']"
+            expected-default-jdk: 17
+
+          - hz-version: 5.3.99
+            expected-jdks: "['11', '17']"
+            expected-default-jdk: 17
+
+          - hz-version: 5.4.0
+            expected-jdks: "['17', '21']"
+            expected-default-jdk: 21
+
+          - hz-version: 5.4.1
+            expected-jdks: "['17', '21']"
+            expected-default-jdk: 21
+
+          - hz-version: 5.5.0
+            expected-jdks: "['17', '21']"
+            expected-default-jdk: 21
+
+          - hz-version: 5.7.0
+            expected-jdks: "['17', '21', '25']"
+            expected-default-jdk: 25
+
+          - hz-version: 6.0.0
+            expected-jdks: "['17', '21', '25']"
+            expected-default-jdk: 25
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Test scripts
-        run: ./get-supported-jdks/test_scripts.sh
-
-      - name: Run get-supported-jdks 5.3.8
-        id: jdks_5_3_8
+      - name: Run get-supported-jdks
+        id: jdks
         uses: ./get-supported-jdks
         with:
-          HZ_VERSION: 5.3.8
-
-      - name: Run get-supported-jdks 5.4.0
-        id: jdks_5_4_0
-        uses: ./get-supported-jdks
-        with:
-          HZ_VERSION: 5.4.0
-
-      - name: Run get-supported-jdks 5.4.1
-        id: jdks_5_4_1
-        uses: ./get-supported-jdks
-        with:
-          HZ_VERSION: 5.4.1
+          HZ_VERSION: ${{ matrix.hz-version }}
 
       - name: Test
         run: |
           set -o errexit -o nounset -o pipefail ${RUNNER_DEBUG:+-x}
           source /dev/stdin <<< "$(curl --silent https://raw.githubusercontent.com/hazelcast/assert.sh/main/assert.sh)"
 
-          TESTS_RESULT=0
-          
-          assert_equals() {
-            local version=$1
-            local expected=$2
-            local actual=$3
-            local msg="For ${version} should be equal to ${expected}"
-            assert_eq "$expected" "$actual" "$msg" && log_success "$msg" || TESTS_RESULT=$?
-          }
-          
-          version=5.3.8
-          assert_equals "${version}" "['11', '17']" "${{ steps.jdks_5_3_8.outputs.jdks }}"
-          assert_equals "${version}" "17" "${{ steps.jdks_5_3_8.outputs.default-jdk }}"
+          assert_eq \
+            "${EXPECTED_JDKS}" \
+            "$ACTUAL_JDKS" \
+            "For ${HZ_VERSION} jdks should be ${EXPECTED_JDKS}"
 
-          version=5.4.0
-          assert_equals "${version}" "['17', '21']" "${{ steps.jdks_5_4_0.outputs.jdks }}"
-          assert_equals "${version}" "21" "${{ steps.jdks_5_4_0.outputs.default-jdk }}"
-
-          version=5.4.1
-          assert_equals "${version}" "['17', '21']" "${{ steps.jdks_5_4_1.outputs.jdks }}"
-          assert_equals "${version}" "21" "${{ steps.jdks_5_4_1.outputs.default-jdk }}"
-
-          assert_eq 0 "$TESTS_RESULT" "All tests should pass"
+          assert_eq \
+            "${EXPECTED_DEFAULT_JDK}" \
+            "${ACTUAL_DEFAULT_JDK}" \
+            "For ${HZ_VERSION} default jdk should be ${EXPECTED_DEFAULT_JDK}"
+        env:
+          HZ_VERSION: ${{ matrix.hz-version }}
+          EXPECTED_JDKS: ${{ matrix.expected-jdks }}
+          ACTUAL_JDKS: ${{ steps.jdks.outputs.jdks }}
+          EXPECTED_DEFAULT_JDK: ${{ matrix.expected-default-jdk }}
+          ACTUAL_DEFAULT_JDK: ${{ steps.jdks.outputs.default-jdk }}
