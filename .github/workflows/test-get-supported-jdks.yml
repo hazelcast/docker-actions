@@ -42,6 +42,10 @@ jobs:
             expected-jdks: "['17', '21', '25']"
             expected-default-jdk: 25
 
+          - hz-version: 5.7.0-BETA
+            expected-jdks: "['17', '21', '25']"
+            expected-default-jdk: 25
+
           - hz-version: 6.0.0
             expected-jdks: "['17', '21', '25']"
             expected-default-jdk: 25
