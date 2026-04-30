@@ -10,7 +10,8 @@ version_less_than() {
 }
 
 get_supported_jdks() {
-  local HZ_VERSION=$1
+  # Strip any pre-release metadata 
+  local HZ_VERSION="${1%%-*}"
   if version_less_than "${HZ_VERSION}" "5.4.0"; then
     echo "['11', '17']"
   elif version_less_than "${HZ_VERSION}" "5.7.0"; then
