@@ -50,6 +50,14 @@ jobs:
             expected-jdks: "['17', '21', '25']"
             expected-default-jdk: 25
 
+          - hz-version: 5.5.0
+            expected-jdks: "['17', '21']"
+            expected-default-jdk: 21
+
+          - hz-version: 5.7.0
+            expected-jdks: "['17', '21', '25']"
+            expected-default-jdk: 25
+
           - hz-version: 6.0.0
             expected-jdks: "['17', '21', '25']"
             expected-default-jdk: 25
@@ -58,8 +66,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Run get-supported-jdks
-        id: jdks
+      - id: jdks
         uses: ./get-supported-jdks
         with:
           HZ_VERSION: ${{ matrix.hz-version }}
