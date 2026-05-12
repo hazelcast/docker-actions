@@ -23,13 +23,13 @@ runs:
         HZ_VERSION: ${{ inputs.HZ_VERSION }}
 
     - id: compare-version-to-5_4
-      uses: madhead/semver-utils@36d1e0ed361bd7b4b77665de8093092eaeabe6ba # v4.3.0
+      uses: madhead/semver-utils@4cf918affe9106ea59f86c6250e5ec4570ac4389 # v5.0.0
       with:
         version: ${{ steps.normalize-version.outputs.version }}
         compare-to: 5.4.0
 
     - id: compare-version-to-5_7
-      uses: madhead/semver-utils@36d1e0ed361bd7b4b77665de8093092eaeabe6ba # v4.3.0
+      uses: madhead/semver-utils@4cf918affe9106ea59f86c6250e5ec4570ac4389 # v5.0.0
       with:
         version: ${{ steps.normalize-version.outputs.version }}
         compare-to: 5.7.0
