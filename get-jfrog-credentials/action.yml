@@ -46,3 +46,4 @@ runs:
         JF_URL: https://${{ steps.get-url.outputs.url }}
       with:
         oidc-provider-name: ${{ inputs.jfrog-oidc-provider-name }}
+        version: latest
