@@ -22,7 +22,7 @@ jobs:
         id: download
         with:
           repo-vars-as-json: "{\n  \"MAVEN_EE_RELEASE_REPO\": \"https://repository.hazelcast.com/release\",\n  \"MAVEN_OSS_RELEASE_REPO\": \" \"\n}"
-          aws-role-to-assume: ${{ secrets.AWS_HAZELCAST_OIDC_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-role-to-assume: ${{ vars.AWS_HAZELCAST_OIDC_GITHUB_ACTIONS_ROLE_ARN }}
           distribution: "${{ matrix.distribution }}"
           hz_version: "5.0"
           classifier: "slim"
@@ -48,7 +48,7 @@ jobs:
         id: download
         with:
           repo-vars-as-json: "{\n  \"MAVEN_OSS_SNAPSHOT_REPO\": \"snapshot-internal::::https://repository.hazelcast.com/snapshot-internal\",\n  \"MAVEN_OSS_RELEASE_REPO\": \" \"\n}"
-          aws-role-to-assume: ${{ secrets.AWS_HAZELCAST_OIDC_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-role-to-assume: ${{ vars.AWS_HAZELCAST_OIDC_GITHUB_ACTIONS_ROLE_ARN }}
           distribution: hazelcast
           hz_version: "5.6.1-SNAPSHOT"
           classifier: "slim"
