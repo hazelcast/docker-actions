@@ -34,7 +34,7 @@ runs:
               echo "platforms=linux/arm64,linux/amd64,linux/s390x,linux/ppc64le" >> ${GITHUB_OUTPUT}
             ;;
             *)
-            echoerr "Unsupported platform behaviour for ${base_image_name}" ; return 1
+            echoerr "Unsupported platform behaviour for ${base_image_name}" ; exit 1
             ;;
         esac
       env:
