@@ -42,7 +42,7 @@ jobs:
           fi
 
           # https://stackoverflow.com/a/2001750
-          if ! tar -tzf ${{ steps.download.outputs.output_file }} > /dev/null; then
+          if ! tar --list --gzip --file ${{ steps.download.outputs.output_file }} > /dev/null; then
             echo "${{ steps.download.outputs.output_file }} not valid!"
             exit 1
           fi
