@@ -58,7 +58,8 @@ runs:
         )
             ;;
           *)
-            echoerr "Unsupported environment (${ENVIRONMENT})" ; exit 1
+            echoerr "Unsupported environment (${ENVIRONMENT})"
+            exit 1
             ;;
         esac
 
