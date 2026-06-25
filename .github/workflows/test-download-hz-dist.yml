@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  test-public:
+  test:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -13,6 +13,12 @@ jobs:
         distribution:
           - hazelcast
           - hazelcast-enterprise
+        version:
+          - 5.1
+          - 5.6.1-SNAPSHOT
+        classifier:
+          - slim
+          - ''
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -21,42 +27,22 @@ jobs:
         uses: ./download-hz-dist
         id: download
         with:
-          repo-vars-as-json: "{\n  \"MAVEN_EE_RELEASE_REPO\": \"https://repository.hazelcast.com/release\",\n  \"MAVEN_OSS_RELEASE_REPO\": \" \"\n}"
+          environment: live
           aws-role-to-assume: ${{ vars.AWS_HAZELCAST_OIDC_GITHUB_ACTIONS_ROLE_ARN }}
           distribution: "${{ matrix.distribution }}"
-          hz_version: "5.0"
+          hz_version: "${{ matrix.version }}"
           classifier: "slim"
           packaging: "tar.gz"
 
-      - name: Check file exists
+      - name: Check file downloaded from `${{ steps.download.outputs.download_url }}`
         run: |
           if [[ ! -f "${{ steps.download.outputs.output_file }}" ]]; then
             echo "${{ steps.download.outputs.output_file }} not found!"
             exit 1
           fi
 
-  test-private:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Download
-        uses: ./download-hz-dist
-        id: download
-        with:
-          repo-vars-as-json: "{\n  \"MAVEN_OSS_SNAPSHOT_REPO\": \"snapshot-internal::::https://repository.hazelcast.com/snapshot-internal\",\n  \"MAVEN_OSS_RELEASE_REPO\": \" \"\n}"
-          aws-role-to-assume: ${{ vars.AWS_HAZELCAST_OIDC_GITHUB_ACTIONS_ROLE_ARN }}
-          distribution: hazelcast
-          hz_version: "5.6.1-SNAPSHOT"
-          classifier: "slim"
-          packaging: "tar.gz"
-
-      - name: Check file exists
-        run: |
-          if [[ ! -f "${{ steps.download.outputs.output_file }}" ]]; then
-            echo "${{ steps.download.outputs.output_file }} not found!"
+          # https://stackoverflow.com/a/2001750
+          if ! tar --list --gzip --file ${{ steps.download.outputs.output_file }} > /dev/null; then
+            echo "${{ steps.download.outputs.output_file }} not valid!"
             exit 1
           fi

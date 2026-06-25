@@ -1,7 +1,6 @@
 name: Download Hazelcast Distribution
 inputs:
-  repo-vars-as-json:
-    description: 'Repo Vars as JSON - not inherited in composite actions - see https://github.com/orgs/community/discussions/49689#discussioncomment-6398261'
+  environment:
     required: true
   aws-role-to-assume:
     description: 'AWS Role to assume for accessing secrets'
@@ -25,61 +24,56 @@ inputs:
     description: 'Path to the output file'
     required: false
 outputs:
-  maven_repo_url:
-    description: 'The Maven repository root URL used to download the distribution'
-    value: ${{ steps.get_repo_url.outputs.repo_url }}
+  download_url:
+    description: 'The URL used to download the distribution'
+    value: ${{ steps.download.outputs.url }}
   output_file:
     description: 'Path to the downloaded file'
     value: ${{ steps.derive-output-file.outputs.file }}
 runs:
   using: "composite"
   steps:
-    - name: Get repository URL
-      id: get_repo_url
+    - name: Derive repositories
+      id: derive-repositories
       shell: bash
       run: |
         . ${GITHUB_ACTION_PATH}/../.github/scripts/logging.functions.sh
 
-        # Pick an appropriate key from "repo-vars-as-json"
-        case "${DISTRIBUTION}" in
-            "hazelcast")
-              if [[ "${HZ_VERSION}" == *"SNAPSHOT"* ]]; then
-                repo_var_name=MAVEN_OSS_SNAPSHOT_REPO
-              else
-                repo_var_name=MAVEN_OSS_RELEASE_REPO
-              fi
+        case "${ENVIRONMENT}" in
+          live)
+            repos=$(cat <<'EOF'
+        https://repo.maven.apache.org/maven2
+        https://repository.hazelcast.com/release
+        https://repository.hazelcast.com/snapshot
+        https://repository.hazelcast.com/snapshot-internal
+        EOF
+        )
             ;;
-            "hazelcast-enterprise")
-              if [[ "${HZ_VERSION}" == *"SNAPSHOT"* ]]; then
-                repo_var_name=MAVEN_EE_SNAPSHOT_REPO
-              else
-                repo_var_name=MAVEN_EE_RELEASE_REPO
-              fi
+          sandbox)
+            repos=$(cat <<'EOF'
+        https://repository.hazelcast.com/sandbox-mvn-prod
+        EOF
+        )
             ;;
-            *)
-            echoerr "Unsupported distribution type '${DISTRIBUTION}'" ; return 1
+          *)
+            echoerr "Unsupported environment (${ENVIRONMENT})"
+            exit 1
             ;;
         esac
 
-        # Lookup up the value of the selected key in "repo-vars-as-json"
-        REPO_URL=$(jq --raw-output .${repo_var_name} <<< "${REPO_VARS_AS_JSON}")
-        echo "repo_url=${REPO_URL}" >> ${GITHUB_OUTPUT}
-
-        # Detect if the repo definition specifies authentication via a Maven server (e.g. "my-private-repo::::https://example.com/private-repo")
-        if [[ "${REPO_URL}" == *[!:]::::* ]]; then
-          echo "authentication-required=true" >> ${GITHUB_OUTPUT}
-        fi
+        {
+          echo "repositories<<EOF"
+          echo "${repos}"
+          echo "EOF"
+        } >> ${GITHUB_OUTPUT}
       env:
-        REPO_VARS_AS_JSON: ${{ inputs.repo-vars-as-json }}
-        DISTRIBUTION: ${{ inputs.distribution }}
-        HZ_VERSION: ${{ inputs.hz_version }}
+        ENVIRONMENT: ${{ inputs.environment }}
 
-      # Should be a relative local path, but doesn't resolve when called from another repo
-    - uses: hazelcast/docker-actions/setup-maven-snapshot-internal@master
-      if: ${{ steps.get_repo_url.outputs.authentication-required == 'true' }}
+    - uses: hazelcast/docker-actions/get-jfrog-credentials@master
+      id: jfrog
       with:
         aws-role-to-assume: ${{ inputs.aws-role-to-assume }}
-        maven-settings-path: ${{ inputs.maven-settings-path }}
+        jfrog-oidc-provider-name: ${{ github.repository_owner }}-snapshot-internal
 
     - name: Derive output file
       id: derive-output-file
@@ -89,23 +83,42 @@ runs:
       env:
         FILE: ${{ inputs.output_file || format('distribution.{0}', inputs.packaging) }}
 
-    - name: Download via Maven
+    - name: Download
+      id: download
       shell: bash
       run: |
-        mvn \
-          org.apache.maven.plugins:maven-dependency-plugin:2.10:get \
-          -DremoteRepositories="${{ steps.get_repo_url.outputs.repo_url }}" \
-          -DgroupId="com.hazelcast" \
-          -DartifactId="${DISTRIBUTION}-distribution" \
-          -Dversion="${HZ_VERSION}" \
-          -Dclassifier="${CLASSIFIER}" \
-          -Dpackaging="${PACKAGING}" \
-          -Dtransitive=false \
-          -Ddest="${{ steps.derive-output-file.outputs.file }}" \
-          --batch-mode \
-          --no-transfer-progress
+        . ${GITHUB_ACTION_PATH}/../.github/scripts/logging.functions.sh
+
+        while IFS= read -r repository; do
+          url="${repository%/}/com/hazelcast/${ARTIFACT_ID}/${VERSION}/${ARTIFACT_ID}-${VERSION}${CLASSIFIER:+-$CLASSIFIER}.${PACKAGING}"
+
+          curl_args=(
+            --fail
+            --location
+            --output "${{ steps.derive-output-file.outputs.file }}"
+            --show-error
+            --silent
+          )
+
+          if [[ "${repository}" == *repository.hazelcast.com* ]]; then
+            curl_args+=(--user "${{ steps.jfrog.outputs.user }}:${{ steps.jfrog.outputs.token }}")
+          fi
+
+          echodebug "Downloading from ${url}..."
+
+          if curl "${curl_args[@]}" "${url}"; then
+            echodebug "Downloaded from ${url}"
+            echo "url=${url}" >> ${GITHUB_OUTPUT}
+            exit 0
+          else
+            echodebug "Failed to download from ${url}"
+          fi
+        done <<< "${{ steps.derive-repositories.outputs.repositories }}"
+
+        echoerr "Distribution not found in ${{ steps.derive-repositories.outputs.repositories }}"
+        exit 1
       env:
-        DISTRIBUTION: ${{ inputs.distribution }}
-        HZ_VERSION: ${{ inputs.hz_version }}
+        ARTIFACT_ID: ${{ inputs.distribution }}-distribution
+        VERSION: ${{ inputs.hz_version }}
         CLASSIFIER: ${{ inputs.classifier }}
         PACKAGING: ${{ inputs.packaging }}
