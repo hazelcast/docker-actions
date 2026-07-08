@@ -8,10 +8,10 @@ runs:
         . ${GITHUB_ACTION_PATH}/../.github/scripts/logging.functions.sh
 
         # https://status.redhat.com/api
-        STATUS=$(curl --fail --silent https://status.redhat.com/api/v2/status.json)
+        STATUS=$(curl --fail --retry 5 --retry-all-errors --show-error --silent https://status.redhat.com/api/v2/status.json)
 
         if jq --exit-status '.status.indicator != "none"' <<< "${STATUS}"; then
           echoerr "❌ RedHat service status"
           echoerr "$(jq '.status' <<< ${STATUS})"
-          echoerr "$(curl --fail --silent https://status.redhat.com/api/v2/incidents/unresolved.json | jq)"
+          echoerr "$(curl --fail --retry 5 --retry-all-errors --show-error --silent https://status.redhat.com/api/v2/incidents/unresolved.json | jq)"
         fi
