@@ -9,6 +9,9 @@ inputs:
   TAG_NAME:
     description: If absent, derived from branch
     required: false
+outputs:
+  TAG_NAME:
+    value: ${{ steps.computed-tag-name.outputs.name }}
 runs:
   using: "composite"
   steps:
@@ -17,6 +20,11 @@ runs:
       id: tag-name
       with:
         VERSION: ${{ inputs.BRANCH }}
+
+    - shell: bash
+      id: computed-tag-name
+      run: |
+        echo "name=${{ inputs.TAG_NAME || steps.tag-name.outputs.TAG_NAME }}" >> ${GITHUB_OUTPUT}
 
     - shell: bash
       run: |
@@ -32,4 +40,4 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.TOKEN }}
         BRANCH: ${{ inputs.BRANCH }}
-        TAG_NAME: ${{ inputs.TAG_NAME || steps.tag-name.outputs.TAG_NAME }}
+        TAG_NAME: ${{ steps.computed-tag-name.outputs.name }}
