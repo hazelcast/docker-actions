@@ -1,0 +1,35 @@
+name: Create tag from specified branch
+
+inputs:
+  TOKEN:
+    required: true
+  BRANCH:
+    description: Branch to create tag from
+    required: true
+  TAG_NAME:
+    description: If absent, derived from branch
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - uses: hazelcast/docker-actions/get-tag-name@master
+      if: ${{ inputs.TAG_NAME == '' }}
+      id: tag-name
+      with:
+        VERSION: ${{ inputs.BRANCH }}
+
+    - shell: bash
+      run: |
+        SHA=$(gh api \
+          repos/${GITHUB_REPOSITORY}/git/ref/heads/${BRANCH} \
+          --jq .object.sha)
+
+        gh api \
+          -X POST \
+          repos/${GITHUB_REPOSITORY}/git/refs \
+          -f ref=refs/tags/${TAG_NAME} \
+          -f sha="${SHA}"
+      env:
+        GH_TOKEN: ${{ inputs.TOKEN }}
+        BRANCH: ${{ inputs.BRANCH }}
+        TAG_NAME: ${{ inputs.TAG_NAME || steps.tag-name.outputs.TAG_NAME }}
