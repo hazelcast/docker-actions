@@ -43,17 +43,17 @@ runs:
           live)
             repos=$(cat <<'EOF'
         https://repo.maven.apache.org/maven2
-        https://repository.hazelcast.com/live-mvn-preprod
         https://repository.hazelcast.com/release
         https://repository.hazelcast.com/snapshot
         https://repository.hazelcast.com/snapshot-internal
+        https://repository.hazelcast.com/live-mvn-preprod
         EOF
         )
             ;;
           sandbox)
             repos=$(cat <<'EOF'
-        https://repository.hazelcast.com/sandbox-mvn-preprod
         https://repository.hazelcast.com/sandbox-mvn-prod
+        https://repository.hazelcast.com/sandbox-mvn-preprod
         EOF
         )
             ;;
