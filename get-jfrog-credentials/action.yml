@@ -7,8 +7,6 @@ inputs:
     description: 'JFrog provider to authenticate against'
     required: true
 outputs:
-  url:
-    value: ${{ steps.get-url.outputs.url }}
   user:
     value: ${{ steps.jfrog.outputs.oidc-user }}
   token:
