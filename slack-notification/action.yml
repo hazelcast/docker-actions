@@ -7,8 +7,8 @@ inputs:
     description: Slack channel to send the notification to
     default: "#hazelcast-docker-notifications"
   status:
-    description: The status to set, otherwise inherited from the enclosing job
-    required: false
+    description: The status to set (`success` or `failure`)
+    required: true
 runs:
   using: "composite"
   steps:
@@ -25,7 +25,7 @@ runs:
           echo "text=❌ \`${GITHUB_WORKFLOW}\` (\`${GITHUB_WORKFLOW_REF}\`) - ${STATUS}\n${JOB_URL}" >> ${GITHUB_OUTPUT}
         fi
       env:
-        STATUS: ${{ inputs.status || job.status }}
+        STATUS: ${{ inputs.status }}
 
     - uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
       with:
