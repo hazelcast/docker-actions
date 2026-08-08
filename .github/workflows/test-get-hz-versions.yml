@@ -7,9 +7,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
       - name: Run get-hz-versions composite action
         id: hz_versions
-        uses: $/get-hz-versions
+        uses: ./get-hz-versions
         with:
           working-directory: ./get-hz-versions/test-data
 
@@ -31,3 +34,4 @@ jobs:
           assert_equals "HZ_VERSION" "1.2.3" "${{ steps.hz_versions.outputs.HZ_VERSION }}"
 
           assert_eq 0 "$TESTS_RESULT" "All tests should pass"
+
