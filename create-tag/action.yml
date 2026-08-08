@@ -15,7 +15,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: hazelcast/docker-actions/get-tag-name@master
+    - uses: $/get-tag-name
       if: ${{ inputs.TAG_NAME == '' }}
       id: tag-name
       with:

@@ -63,11 +63,8 @@ jobs:
             expected-default-jdk: 25
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
       - id: jdks
-        uses: ./get-supported-jdks
+        uses: $/get-supported-jdks
         with:
           HZ_VERSION: ${{ matrix.hz-version }}
 

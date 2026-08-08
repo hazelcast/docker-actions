@@ -7,12 +7,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
       - name: Run get-hz-versions composite action
         id: hz_versions
-        uses: ./get-hz-versions
+        uses: $/get-hz-versions
         with:
           working-directory: ./get-hz-versions/test-data
 
