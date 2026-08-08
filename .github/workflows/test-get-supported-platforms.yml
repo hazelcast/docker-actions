@@ -7,30 +7,33 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
       - name: Run get-supported-platforms OS JDK11
         id: platform_os_jdk11
-        uses: $/get-supported-platforms
+        uses: ./get-supported-platforms
         with:
           dockerfile: ./get-supported-platforms/test-data/hazelcast-oss/Dockerfile
           jdk: 11
 
       - name: Run get-supported-platforms EE JDK11
         id: platform_ee_jdk11
-        uses: $/get-supported-platforms
+        uses: ./get-supported-platforms
         with:
           dockerfile: ./get-supported-platforms/test-data/hazelcast-enterprise/Dockerfile
           jdk: 11
 
       - name: Run get-supported-platforms OS JDK21
         id: platform_os_jdk21
-        uses: $/get-supported-platforms
+        uses: ./get-supported-platforms
         with:
           dockerfile: ./get-supported-platforms/test-data/hazelcast-oss/Dockerfile
           jdk: 21
 
       - name: Run get-supported-platforms EE JDK21
         id: platform_ee_jdk21
-        uses: $/get-supported-platforms
+        uses: ./get-supported-platforms
         with:
           dockerfile: ./get-supported-platforms/test-data/hazelcast-enterprise/Dockerfile
           jdk: 21
