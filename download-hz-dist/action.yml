@@ -71,7 +71,7 @@ runs:
       env:
         ENVIRONMENT: ${{ inputs.environment }}
 
-    - uses: hazelcast/docker-actions/get-jfrog-credentials@master
+    - uses: $/get-jfrog-credentials
       id: jfrog
       with:
         aws-role-to-assume: ${{ inputs.aws-role-to-assume }}

@@ -9,11 +9,8 @@ jobs:
       distribution-classifiers: ${{ steps.distribution-classifiers.outputs.classifiers }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
       - id: distribution-classifiers
-        uses: ./get-distribution-classifiers
+        uses: $/get-distribution-classifiers
 
   # Doesn't explicitly assert, but validates that the output is valid for matrix consumption
   test:

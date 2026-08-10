@@ -13,11 +13,8 @@ jobs:
           - success
           - failure
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
       - name: Run action (status="${{ matrix.status }}")
-        uses: ./slack-notification
+        uses: $/slack-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           slack-channel: "#test-channel"

@@ -7,10 +7,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
       - name: Run get-tag-name
-        uses: ./get-tag-name
+        uses: $/get-tag-name
         with:
           VERSION: "5.4.1"

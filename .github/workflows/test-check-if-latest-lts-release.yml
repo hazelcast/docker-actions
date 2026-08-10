@@ -13,26 +13,21 @@ jobs:
           repository: hazelcast/hazelcast-docker
           fetch-depth: 0
 
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          path: docker-actions
-
       - name: Run check-if-latest-lts-release 5.5.0
         id: check-if-latest-lts-release-5_5_0
-        uses: ./docker-actions/check-if-latest-lts-release
+        uses: $/check-if-latest-lts-release
         with:
           hz_version: 5.5.0
 
       - name: Run check-if-latest-lts-release 5.5.10
         id: check-if-latest-lts-release-5_5_10
-        uses: ./docker-actions/check-if-latest-lts-release
+        uses: $/check-if-latest-lts-release
         with:
           hz_version: 5.5.10
 
       - name: Run check-if-latest-lts-release 5.6.0
         id: check-if-latest-lts-release-5_6_0
-        uses: ./docker-actions/check-if-latest-lts-release
+        uses: $/check-if-latest-lts-release
         with:
           hz_version: 5.6.0
 

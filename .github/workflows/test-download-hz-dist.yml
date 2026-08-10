@@ -20,11 +20,8 @@ jobs:
           - slim
           - ''
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
       - name: Download "${{ matrix.distribution }}"
-        uses: ./download-hz-dist
+        uses: $/download-hz-dist
         id: download
         with:
           environment: live
