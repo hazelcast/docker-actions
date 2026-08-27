@@ -98,6 +98,8 @@ runs:
             --fail
             --location
             --output "${{ steps.derive-output-file.outputs.file }}"
+            --retry 5
+            --retry-all-errors
             --show-error
             --silent
           )
