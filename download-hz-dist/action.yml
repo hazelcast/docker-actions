@@ -100,9 +100,12 @@ runs:
             --output "${{ steps.derive-output-file.outputs.file }}"
             --retry 5
             --retry-all-errors
-            --show-error
             --silent
           )
+
+          if [[ "${RUNNER_DEBUG:-}" == "1" ]]; then
+            curl_args+=(--show-error)
+          fi
 
           if [[ "${repository}" == *repository.hazelcast.com* ]]; then
             curl_args+=(--user "${{ steps.jfrog.outputs.user }}:${{ steps.jfrog.outputs.token }}")
