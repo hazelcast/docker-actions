@@ -91,6 +91,8 @@ runs:
       run: |
         . ${GITHUB_ACTION_PATH}/../.github/scripts/logging.functions.sh
 
+        errors=
+
         while IFS= read -r repository; do
           url="${repository%/}/com/hazelcast/${ARTIFACT_ID}/${VERSION}/${ARTIFACT_ID}-${VERSION}${CLASSIFIER:+-$CLASSIFIER}.${PACKAGING}"
 
@@ -109,17 +111,17 @@ runs:
           fi
 
           echodebug "Downloading from ${url}..."
-
-          if curl "${curl_args[@]}" "${url}"; then
+          if curl_error=$(curl "${curl_args[@]}" "${url}" 2>&1); then
             echodebug "Downloaded from ${url}"
             echo "url=${url}" >> ${GITHUB_OUTPUT}
             exit 0
           else
-            echodebug "Failed to download from ${url}"
+            echodebug "Failed to download from ${url}: ${curl_error}"
+            errors+="${url}: ${curl_error}"$'\n'
           fi
         done <<< "${{ steps.derive-repositories.outputs.repositories }}"
 
-        echoerr "Distribution not found in ${{ steps.derive-repositories.outputs.repositories }}"
+        echoerr "Distribution not found:"$'\n'"${errors}"
         exit 1
       env:
         ARTIFACT_ID: ${{ inputs.distribution }}-distribution
