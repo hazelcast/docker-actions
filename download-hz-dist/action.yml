@@ -63,13 +63,21 @@ runs:
             ;;
         esac
 
+        # Check `snapshot` repos for `SNAPSHOT` artifacts and vice versa
+        if [[ "${VERSION}" == *SNAPSHOT* ]]; then
+          filtered_repos=$(grep 'snapshot' <<< "${repos}")
+        else
+          filtered_repos=$(grep --invert-match 'snapshot' <<< "${repos}")
+        fi
+
         {
           echo "repositories<<EOF"
-          echo "${repos}"
+          echo "${filtered_repos}"
           echo "EOF"
         } >> ${GITHUB_OUTPUT}
       env:
         ENVIRONMENT: ${{ inputs.environment }}
+        VERSION: ${{ inputs.hz_version }}
 
     - uses: $/get-jfrog-credentials
       id: jfrog
