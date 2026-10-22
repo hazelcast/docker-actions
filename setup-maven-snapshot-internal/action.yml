@@ -15,7 +15,7 @@ runs:
         aws-role-to-assume: ${{ inputs.aws-role-to-assume }}
         jfrog-oidc-provider-name: ${{ github.repository_owner }}-snapshot-internal
 
-    - uses: s4u/maven-settings-action@894661b3ddae382f1ae8edbeab60987e08cf0788 # v4.0.0
+    - uses: s4u/maven-settings-action@4cfd36368400327fd45dcb28f190ae7b85533deb # v4.1.0
       with:
         path: ${{ inputs.maven-settings-path }}
         servers: |
