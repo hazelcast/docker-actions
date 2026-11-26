@@ -105,6 +105,7 @@ runs:
           url="${repository%/}/com/hazelcast/${ARTIFACT_ID}/${VERSION}/${ARTIFACT_ID}-${VERSION}${CLASSIFIER:+-$CLASSIFIER}.${PACKAGING}"
 
           curl_args=(
+            --user-agent "${GITHUB_REPOSITORY//\//-} (${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY})"
             --fail
             --location
             --output "${{ steps.derive-output-file.outputs.file }}"
